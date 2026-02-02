@@ -13,6 +13,20 @@ The **"Failed to load module script" (MIME type text/plain)** and **favicon 404*
 
 **If you still see both errors:** The server is serving the **repo root** (source), not `dist/`. Point the server’s **document root** to the **`dist/`** folder (or copy `dist/` contents into the web root). Do not use the project root as the document root.
 
+### Still seeing “main.tsx” in the MIME error?
+
+That means the browser is loading the **source** `index.html` (which has `<script src="/src/main.tsx">`), not the **built** one from `dist/` (which has `<script src="/assets/index-….js">`). So the document root is still wrong.
+
+**Verify:**
+
+1. **View Page Source** on the live site (e.g. right‑click → View Page Source).  
+   - If you see `src="/src/main.tsx"` → the server is serving the **project root**, not `dist/`.  
+   - You should see `src="/assets/index-….js"` (and a `.css` in `assets/`).
+
+2. **Apache:** Confirm `DocumentRoot` is **exactly** the path to the **`dist`** directory (e.g. `/var/www/thedashboard.seamuns.site/dist`), not the repo root. Then run `sudo apachectl configtest` and restart Apache (e.g. `sudo systemctl restart apache2` or `sudo service httpd restart`). If you use a control panel, change the domain’s document root to that `dist` path and save.
+
+3. **On the server:** Ensure `dist/` exists and contains `index.html`, `favicon.svg`, and an `assets/` folder. If you deploy by copying files, upload the **contents** of `dist/` into the directory that is the document root.
+
 ---
 
 ## 1. Build locally (to test)
