@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from '
 
 const STORAGE_KEY_THEME = 'seamuns-dashboard-theme'
 const STORAGE_KEY_COLOR_MODE = 'seamuns-dashboard-color-mode'
+const STORAGE_KEY_COLOR_THEME = 'seamuns-dashboard-color-theme'
 
 export const THEMES = [
   { id: 'default', label: 'Default', emoji: '◆', brand: '#2563eb' },
@@ -15,13 +16,26 @@ export const THEMES = [
   { id: 'rights', label: 'Human rights', emoji: '✊', brand: '#dc2626' },
 ] as const
 
+export const COLOR_THEMES = [
+  { id: 'blue', label: 'Blue', emoji: '🔵' },
+  { id: 'teal', label: 'Teal', emoji: '🩵' },
+  { id: 'violet', label: 'Violet', emoji: '💜' },
+  { id: 'rose', label: 'Rose', emoji: '🌹' },
+  { id: 'slate', label: 'Slate', emoji: '⬛' },
+  { id: 'amber', label: 'Amber', emoji: '🟠' },
+] as const
+
 export type ThemeId = (typeof THEMES)[number]['id']
+export type ColorThemeId = (typeof COLOR_THEMES)[number]['id']
 export type ColorMode = 'light' | 'dark'
 
 type ThemeContextValue = {
   themeId: ThemeId
   setThemeId: (id: ThemeId) => void
   themes: typeof THEMES
+  colorThemeId: ColorThemeId
+  setColorThemeId: (id: ColorThemeId) => void
+  colorThemes: typeof COLOR_THEMES
   colorMode: ColorMode
   setColorMode: (mode: ColorMode) => void
 }
@@ -31,6 +45,9 @@ const ThemeContext = createContext<ThemeContextValue | null>(null)
 const isValidThemeId = (s: string): s is ThemeId =>
   THEMES.some((t) => t.id === s)
 
+const isValidColorThemeId = (s: string): s is ColorThemeId =>
+  COLOR_THEMES.some((t) => t.id === s)
+
 const isValidColorMode = (s: string): s is ColorMode =>
   s === 'light' || s === 'dark'
 
@@ -39,6 +56,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     if (typeof window === 'undefined') return 'default'
     const stored = localStorage.getItem(STORAGE_KEY_THEME)
     return stored && isValidThemeId(stored) ? stored : 'default'
+  })
+
+  const [colorThemeId, setColorThemeIdState] = useState<ColorThemeId>(() => {
+    if (typeof window === 'undefined') return 'blue'
+    const stored = localStorage.getItem(STORAGE_KEY_COLOR_THEME)
+    return stored && isValidColorThemeId(stored) ? stored : 'blue'
   })
 
   const [colorMode, setColorModeState] = useState<ColorMode>(() => {
@@ -53,11 +76,17 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, [themeId])
 
   useEffect(() => {
+    document.documentElement.setAttribute('data-color-theme', colorThemeId)
+    localStorage.setItem(STORAGE_KEY_COLOR_THEME, colorThemeId)
+  }, [colorThemeId])
+
+  useEffect(() => {
     document.documentElement.setAttribute('data-color-mode', colorMode)
     localStorage.setItem(STORAGE_KEY_COLOR_MODE, colorMode)
   }, [colorMode])
 
   const setThemeId = (id: ThemeId) => setThemeIdState(id)
+  const setColorThemeId = (id: ColorThemeId) => setColorThemeIdState(id)
   const setColorMode = (mode: ColorMode) => setColorModeState(mode)
 
   return (
@@ -66,6 +95,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         themeId,
         setThemeId,
         themes: THEMES,
+        colorThemeId,
+        setColorThemeId,
+        colorThemes: COLOR_THEMES,
         colorMode,
         setColorMode,
       }}

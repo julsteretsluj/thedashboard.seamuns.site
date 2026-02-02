@@ -26,7 +26,7 @@ export default function ChairArchive() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="font-serif text-2xl text-[var(--text)] mb-1">📁 Archive</h2>
+        <h2 className="font-semibold text-2xl text-[var(--text)] mb-1">📁 Archive</h2>
         <p className="text-[var(--text-muted)] text-sm">Position papers, chair reports, slides, speeches, prep docs.</p>
       </div>
       <div className="card-block p-4 space-y-4">

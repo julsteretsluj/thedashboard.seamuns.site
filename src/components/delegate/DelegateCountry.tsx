@@ -6,7 +6,7 @@ export default function DelegateCountry() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="font-serif text-2xl text-[var(--text)] mb-1">🌍 Country Assignment</h2>
+        <h2 className="font-semibold text-2xl text-[var(--text)] mb-1">🌍 Country Assignment</h2>
         <p className="text-[var(--text-muted)] text-sm">Your country and brief stance overview for this conference.</p>
       </div>
       <div className="card-block p-4 space-y-4">
@@ -17,7 +17,7 @@ export default function DelegateCountry() {
             value={conferenceName}
             onChange={(e) => setConferenceName(e.target.value)}
             placeholder="e.g. NMUN 2025"
-            className="w-full px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--text-muted)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold)]"
+            className="w-full px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--text-muted)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
           />
         </label>
         <label className="block">
@@ -27,7 +27,7 @@ export default function DelegateCountry() {
             value={country}
             onChange={(e) => setCountry(e.target.value)}
             placeholder="e.g. France, United Kingdom"
-            className="w-full px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--text-muted)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold)]"
+            className="w-full px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--text-muted)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
           />
         </label>
         <label className="block">
@@ -37,7 +37,7 @@ export default function DelegateCountry() {
             onChange={(e) => setStanceOverview(e.target.value)}
             placeholder="Summarize your country's position on the committee topic(s)..."
             rows={5}
-            className="w-full px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--text-muted)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold)] resize-none"
+            className="w-full px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--text-muted)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)] resize-none"
           />
         </label>
       </div>

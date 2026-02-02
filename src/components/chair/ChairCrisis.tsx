@@ -43,7 +43,7 @@ export default function ChairCrisis() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="font-serif text-2xl text-[var(--text)] mb-1">⚠️ Crisis Dashboard</h2>
+        <h2 className="font-semibold text-2xl text-[var(--text)] mb-1">⚠️ Crisis Dashboard</h2>
         <p className="text-[var(--text-muted)] text-sm">Slides · Speakers · Facts · Pathways.</p>
       </div>
       <div className="flex gap-2 border-b border-[var(--border)] pb-2">

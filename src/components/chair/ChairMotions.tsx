@@ -1,16 +1,100 @@
 import { useState } from 'react'
 import { useChair } from '../../context/ChairContext'
-import { Plus, Star, Check, X, Minus } from 'lucide-react'
+import { Plus, Star, Check, X, Minus, ChevronDown, ChevronUp } from 'lucide-react'
+
+type PresetField = { key: string; label: string; placeholder: string }
+type Preset = {
+  id: string
+  label: string
+  type: 'motion' | 'point'
+  template: (values: Record<string, string>) => string
+  fields: PresetField[]
+}
+
+const PRESETS: Preset[] = [
+  {
+    id: 'mod-caucus',
+    label: 'Moderated caucus',
+    type: 'motion',
+    template: (v) =>
+      `Motion for moderated caucus for ${v.duration || '___'} on the topic of ${v.topic || '___'} with ${v.speakerTime || '___'} per speaker`,
+    fields: [
+      { key: 'duration', label: 'Total time', placeholder: 'e.g. 10 minutes' },
+      { key: 'topic', label: 'Topic', placeholder: 'e.g. causes of conflict' },
+      { key: 'speakerTime', label: 'Time per speaker', placeholder: 'e.g. 45 seconds' },
+    ],
+  },
+  {
+    id: 'unmod-caucus',
+    label: 'Unmoderated caucus',
+    type: 'motion',
+    template: (v) => `Motion for unmoderated caucus for ${v.duration || '___'}`,
+    fields: [{ key: 'duration', label: 'Duration', placeholder: 'e.g. 5 minutes' }],
+  },
+  {
+    id: 'open-speaker-list',
+    label: 'Open speaker list',
+    type: 'motion',
+    template: () => 'Motion to open the speaker list',
+    fields: [],
+  },
+  {
+    id: 'close-speaker-list',
+    label: 'Close speaker list',
+    type: 'motion',
+    template: () => 'Motion to close the speaker list',
+    fields: [],
+  },
+  {
+    id: 'point-order',
+    label: 'Point of order',
+    type: 'point',
+    template: () => 'Point of order',
+    fields: [],
+  },
+  {
+    id: 'point-information',
+    label: 'Point of information',
+    type: 'point',
+    template: () => 'Point of information',
+    fields: [],
+  },
+  {
+    id: 'point-personal',
+    label: 'Point of personal privilege',
+    type: 'point',
+    template: () => 'Point of personal privilege',
+    fields: [],
+  },
+]
 
 export default function ChairMotions() {
   const { motions, addMotion, starMotion, setMotionStatus, startVote } = useChair()
   const [text, setText] = useState('')
   const [type, setType] = useState<'motion' | 'point'>('motion')
+  const [presetOpen, setPresetOpen] = useState(false)
+  const [selectedPreset, setSelectedPreset] = useState<Preset | null>(null)
+  const [presetValues, setPresetValues] = useState<Record<string, string>>({})
 
   const submit = () => {
     if (!text.trim()) return
     addMotion(text.trim(), type)
     setText('')
+  }
+
+  const applyPreset = (preset: Preset) => {
+    setSelectedPreset(preset)
+    setPresetValues({})
+    setType(preset.type)
+  }
+
+  const submitPreset = () => {
+    if (!selectedPreset) return
+    const built = selectedPreset.template(presetValues)
+    addMotion(built, selectedPreset.type)
+    setSelectedPreset(null)
+    setPresetValues({})
+    setPresetOpen(false)
   }
 
   const activeMotions = motions.filter((m) => m.status === 'active')
@@ -19,7 +103,7 @@ export default function ChairMotions() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="font-serif text-2xl text-[var(--text)] mb-1">📜 Motions & Points</h2>
+        <h2 className="font-semibold text-2xl text-[var(--text)] mb-1">📜 Motions & Points</h2>
         <p className="text-[var(--text-muted)] text-sm">Record and star motions and points.</p>
       </div>
 
@@ -58,6 +142,75 @@ export default function ChairMotions() {
             <Plus className="w-4 h-4" /> ➕ Add
           </button>
         </div>
+
+        <div className="border-t border-[var(--border)] pt-3 mt-3">
+          <button
+            type="button"
+            onClick={() => setPresetOpen(!presetOpen)}
+            className="flex items-center gap-1.5 text-xs font-medium text-[var(--text-muted)] hover:text-[var(--accent)]"
+          >
+            {presetOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+            Preset options
+          </button>
+          {presetOpen && (
+            <div className="mt-2 space-y-2">
+              <div className="flex flex-wrap gap-1.5">
+                {PRESETS.map((p) => (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => applyPreset(p)}
+                    className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                      selectedPreset?.id === p.id
+                        ? 'bg-[var(--accent)] text-white'
+                        : 'bg-[var(--bg-elevated)] text-[var(--text-muted)] hover:text-[var(--text)] border border-[var(--border)]'
+                    }`}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+              {selectedPreset && (
+                <div className="rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] p-3 space-y-2">
+                  {selectedPreset.fields.length === 0 ? (
+                    <p className="text-xs text-[var(--text-muted)]">
+                      {selectedPreset.template({})}
+                    </p>
+                  ) : (
+                    selectedPreset.fields.map((f) => (
+                      <label key={f.key} className="block">
+                        <span className="text-xs text-[var(--text-muted)] block mb-0.5">{f.label}</span>
+                        <input
+                          type="text"
+                          value={presetValues[f.key] ?? ''}
+                          onChange={(e) => setPresetValues((v) => ({ ...v, [f.key]: e.target.value }))}
+                          placeholder={f.placeholder}
+                          className="w-full px-2.5 py-1.5 rounded-md bg-[var(--bg-card)] border border-[var(--border)] text-[var(--text)] text-sm placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                        />
+                      </label>
+                    ))
+                  )}
+                  <div className="flex gap-2 pt-1">
+                    <button
+                      type="button"
+                      onClick={submitPreset}
+                      className="px-3 py-1.5 rounded-md bg-[var(--accent)] text-white text-xs font-medium hover:opacity-90"
+                    >
+                      Add {selectedPreset.type === 'motion' ? 'motion' : 'point'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedPreset(null)}
+                      className="px-3 py-1.5 rounded-md text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--bg-card)] text-xs font-medium"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       {activeMotions.length > 0 && (
@@ -68,10 +221,10 @@ export default function ChairMotions() {
               <li key={m.id} className="flex items-center gap-2 flex-wrap">
                 <button
                   onClick={() => starMotion(m.id)}
-                  className="p-1 rounded text-[var(--text-muted)] hover:text-[var(--gold)]"
+                  className="p-1 rounded text-[var(--text-muted)] hover:text-[var(--accent)]"
                   title={m.starred ? 'Unstar' : 'Star'}
                 >
-                  <Star className={`w-4 h-4 ${m.starred ? 'fill-[var(--gold)] text-[var(--gold)]' : ''}`} />
+                  <Star className={`w-4 h-4 ${m.starred ? 'fill-[var(--accent)] text-[var(--accent)]' : ''}`} />
                 </button>
                 <span className="text-xs text-[var(--text-muted)] uppercase">{m.type}</span>
                 <span className="text-sm text-[var(--text)] flex-1">{m.text}</span>
@@ -97,12 +250,14 @@ export default function ChairMotions() {
                   >
                     <Minus className="w-4 h-4" />
                   </button>
-                  <button
-                    onClick={() => startVote(m.id)}
-                    className="px-2 py-1 rounded-lg bg-[var(--accent)] text-white text-xs font-medium"
-                  >
-                    Vote
-                  </button>
+                  {m.type === 'motion' && (
+                    <button
+                      onClick={() => startVote(m.id)}
+                      className="px-2 py-1 rounded-lg bg-[var(--accent)] text-white text-xs font-medium"
+                    >
+                      Vote
+                    </button>
+                  )}
                 </div>
               </li>
             ))}
@@ -119,9 +274,9 @@ export default function ChairMotions() {
             <li key={m.id} className="px-4 py-3 flex items-start gap-2">
               <button
                 onClick={() => starMotion(m.id)}
-                className="p-1 rounded mt-0.5 text-[var(--text-muted)] hover:text-[var(--gold)] flex-shrink-0"
+                className="p-1 rounded mt-0.5 text-[var(--text-muted)] hover:text-[var(--accent)] flex-shrink-0"
               >
-                <Star className={`w-4 h-4 ${m.starred ? 'fill-[var(--gold)] text-[var(--gold)]' : ''}`} />
+                <Star className={`w-4 h-4 ${m.starred ? 'fill-[var(--accent)] text-[var(--accent)]' : ''}`} />
               </button>
               <div className="flex-1 min-w-0">
                 <span className="text-xs text-[var(--text-muted)] uppercase">{m.type}</span>
@@ -129,7 +284,7 @@ export default function ChairMotions() {
                 <div className="flex items-center gap-2 mt-1 text-xs text-[var(--text-muted)]">
                   <span>{new Date(m.timestamp).toLocaleString()}</span>
                   <span className="capitalize">{m.status}</span>
-                  {m.votes && (
+                  {m.type === 'motion' && m.votes && (
                     <span>Yes {m.votes.yes} / No {m.votes.no} / Abstain {m.votes.abstain}</span>
                   )}
                 </div>

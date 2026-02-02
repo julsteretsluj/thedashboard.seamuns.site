@@ -146,11 +146,15 @@ export function ChairProvider({ children }: { children: ReactNode }) {
     }))
   }, [])
   const startVote = useCallback((motionId: string) => {
-    setState((s) => ({
-      ...s,
-      voteInProgress: s.motions.find((m) => m.id === motionId) ?? null,
-      delegateVotes: {},
-    }))
+    setState((s) => {
+      const motion = s.motions.find((m) => m.id === motionId)
+      if (!motion || motion.type === 'point') return s
+      return {
+        ...s,
+        voteInProgress: motion,
+        delegateVotes: {},
+      }
+    })
   }, [])
   const recordVote = useCallback((delegateId: string, vote: 'yes' | 'no' | 'abstain') => {
     setState((s) => ({

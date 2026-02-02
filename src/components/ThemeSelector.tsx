@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from 'react'
-import { Palette, Sun, Moon } from 'lucide-react'
+import { Palette, Sun, Moon, ChevronDown } from 'lucide-react'
 import { useTheme } from '../context/ThemeContext'
 
+/** Theme selector aligned with seamuns.site: Appearance (Light/Dark) + theme colors (Blue, Teal, etc.) */
 export default function ThemeSelector() {
-  const { themeId, setThemeId, themes, colorMode, setColorMode } = useTheme()
+  const { colorThemeId, setColorThemeId, colorThemes, colorMode, setColorMode, setThemeId } = useTheme()
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -15,31 +16,35 @@ export default function ThemeSelector() {
     return () => document.removeEventListener('click', handleClickOutside)
   }, [open])
 
-  const current = themes.find((t) => t.id === themeId) ?? themes[0]
+  const current = colorThemes.find((c) => c.id === colorThemeId) ?? colorThemes[0]
 
   return (
     <div className="relative" ref={ref}>
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--bg-card)] transition-colors"
+        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-[var(--text)] hover:bg-[var(--bg-card)] border border-[var(--border)] bg-[var(--bg-elevated)] transition-colors"
         aria-expanded={open}
         aria-haspopup="listbox"
         aria-label="Theme"
       >
-        <Palette className="w-4 h-4 flex-shrink-0" />
+        <Palette className="w-4 h-4 flex-shrink-0 text-[var(--text-muted)]" />
         <span className="hidden sm:inline">Theme</span>
-        <span className="text-[var(--brand)]" title={current.label}>
+        <span className="text-[var(--brand)]" title={current.label} aria-hidden>
           {current.emoji}
         </span>
+        <ChevronDown
+          className={`w-4 h-4 flex-shrink-0 text-[var(--text-muted)] transition-transform ${open ? 'rotate-180' : ''}`}
+          aria-hidden
+        />
       </button>
       {open && (
         <div
-          className="absolute right-0 top-full mt-1 py-2 rounded-xl border border-[var(--border)] bg-[var(--bg-card)] shadow-lg z-50 min-w-[200px]"
-          role="listbox"
+          className="absolute right-0 top-full mt-1.5 py-2 rounded-xl border border-[var(--border)] bg-[var(--bg-card)] shadow-[var(--shadow-card)] shadow-lg z-50 min-w-[200px]"
+          role="dialog"
           aria-label="Theme options"
         >
-          <div className="px-3 py-1.5 text-xs font-medium text-[var(--text-muted)] uppercase tracking-wide border-b border-[var(--border)] mb-2">
+          <div className="px-3 py-1.5 text-xs font-medium text-[var(--text-muted)] border-b border-[var(--border)] mb-2">
             Appearance
           </div>
           <div className="flex gap-1 px-2 pb-2">
@@ -48,7 +53,7 @@ export default function ThemeSelector() {
               onClick={() => setColorMode('light')}
               className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                 colorMode === 'light'
-                  ? 'bg-[var(--brand-soft)] text-[var(--brand)]'
+                  ? 'bg-[var(--brand)] text-white shadow-sm'
                   : 'text-[var(--text-muted)] hover:bg-[var(--bg-elevated)] hover:text-[var(--text)]'
               }`}
               aria-pressed={colorMode === 'light'}
@@ -61,7 +66,7 @@ export default function ThemeSelector() {
               onClick={() => setColorMode('dark')}
               className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                 colorMode === 'dark'
-                  ? 'bg-[var(--brand-soft)] text-[var(--brand)]'
+                  ? 'bg-[var(--brand)] text-white shadow-sm'
                   : 'text-[var(--text-muted)] hover:bg-[var(--bg-elevated)] hover:text-[var(--text)]'
               }`}
               aria-pressed={colorMode === 'dark'}
@@ -70,36 +75,39 @@ export default function ThemeSelector() {
               Dark
             </button>
           </div>
-          <div className="px-3 py-1.5 text-xs font-medium text-[var(--text-muted)] uppercase tracking-wide border-b border-[var(--border)] mb-2">
-            Color theme
+          <div className="px-3 py-1.5 text-xs font-medium text-[var(--text-muted)] border-b border-[var(--border)] mb-2">
+            Theme color
           </div>
-          {themes.map((t) => (
-            <button
-              key={t.id}
-              type="button"
-              role="option"
-              aria-selected={themeId === t.id}
-              onClick={() => {
-                setThemeId(t.id)
-                setOpen(false)
-              }}
-              className={`flex items-center gap-2 w-full px-3 py-2 text-left text-sm transition-colors whitespace-nowrap min-w-0 ${
-                themeId === t.id
-                  ? 'bg-[var(--brand-soft)] text-[var(--brand)]'
-                  : 'text-[var(--text)] hover:bg-[var(--bg-elevated)]'
-              }`}
-            >
-              <span className="text-base flex-shrink-0" aria-hidden>
-                {t.emoji}
-              </span>
-              <span className="truncate">{t.label}</span>
-              {themeId === t.id && (
-                <span className="ml-auto text-[var(--brand)]" aria-hidden>
-                  ✓
+          <div className="max-h-[260px] overflow-y-auto" role="listbox" aria-label="Theme color">
+            {colorThemes.map((c) => (
+              <button
+                key={c.id}
+                type="button"
+                role="option"
+                aria-selected={colorThemeId === c.id}
+                onClick={() => {
+                  setColorThemeId(c.id)
+                  setThemeId('default')
+                  setOpen(false)
+                }}
+                className={`flex items-center gap-2 w-full px-3 py-2 text-left text-sm transition-colors whitespace-nowrap min-w-0 ${
+                  colorThemeId === c.id
+                    ? 'bg-[var(--brand)] text-white'
+                    : 'text-[var(--text)] hover:bg-[var(--bg-elevated)]'
+                }`}
+              >
+                <span className="text-base flex-shrink-0" aria-hidden>
+                  {c.emoji}
                 </span>
-              )}
-            </button>
-          ))}
+                <span className="truncate">{c.label}</span>
+                {colorThemeId === c.id && (
+                  <span className="ml-auto text-white" aria-hidden>
+                    ✓
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
         </div>
       )}
     </div>

@@ -7,7 +7,7 @@ export default function ChairSession() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="font-serif text-2xl text-[var(--text)] mb-1">▶️ Committee Session</h2>
+        <h2 className="font-semibold text-2xl text-[var(--text)] mb-1">▶️ Committee Session</h2>
         <p className="text-[var(--text-muted)] text-sm">Start or stop the committee session.</p>
       </div>
       <div className="card-block p-6 flex flex-col sm:flex-row items-center gap-6">

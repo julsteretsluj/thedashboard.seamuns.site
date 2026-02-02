@@ -15,7 +15,7 @@ export default function DelegateChecklist() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="font-serif text-2xl text-[var(--text)] mb-1">✅ Checklist</h2>
+        <h2 className="font-semibold text-2xl text-[var(--text)] mb-1">✅ Checklist</h2>
         <p className="text-[var(--text-muted)] text-sm">Track your prep: position paper, research, speeches.</p>
       </div>
       <div className="card-block p-4 space-y-2">
@@ -24,8 +24,8 @@ export default function DelegateChecklist() {
             key={key}
             className="flex items-center gap-3 px-3 py-3 rounded-lg cursor-pointer hover:bg-[var(--bg-elevated)] transition-colors"
           >
-            <span className="text-[var(--gold)]">
-              {checklist[key] ? <CheckSquare className="w-5 h-5 fill-[var(--gold)]" /> : <Square className="w-5 h-5" />}
+            <span className="text-[var(--accent)]">
+              {checklist[key] ? <CheckSquare className="w-5 h-5 fill-[var(--accent)]" /> : <Square className="w-5 h-5" />}
             </span>
             <span className="text-sm text-[var(--text)]">{label}</span>
             <input

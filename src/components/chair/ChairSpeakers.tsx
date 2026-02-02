@@ -36,7 +36,7 @@ export default function ChairSpeakers() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="font-serif text-2xl text-[var(--text)] mb-1">🎤 Speakers</h2>
+        <h2 className="font-semibold text-2xl text-[var(--text)] mb-1">🎤 Speakers</h2>
         <p className="text-[var(--text-muted)] text-sm">Mod Speakers List, Active Speaker (Timed), Consultation Speakers.</p>
       </div>
 
@@ -46,7 +46,7 @@ export default function ChairSpeakers() {
         </h3>
         {activeSpeaker ? (
           <div className="flex flex-wrap items-center gap-4">
-            <span className="text-lg font-serif text-[var(--text)]">
+            <span className="text-lg font-semibold text-[var(--text)]">
               {activeSpeaker.country} — {activeSpeaker.name}
             </span>
             <div className="flex items-center gap-2 text-sm">

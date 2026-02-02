@@ -8,7 +8,7 @@ export default function ChairRoomView() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="font-serif text-2xl text-[var(--text)] mb-1">🖥️ Digital Room View</h2>
+        <h2 className="font-semibold text-2xl text-[var(--text)] mb-1">🖥️ Digital Room View</h2>
         <p className="text-[var(--text-muted)] text-sm">
           {committee} — {topic}
         </p>
@@ -55,7 +55,7 @@ export default function ChairRoomView() {
                     {totalStrikes > 0 && (
                       <span
                         className={`inline-flex items-center gap-0.5 text-xs ${
-                          hasRed ? 'text-[var(--danger)]' : 'text-[var(--gold)]'
+                          hasRed ? 'text-[var(--danger)]' : 'text-[var(--accent)]'
                         }`}
                         title={Object.entries(counts)
                           .map(([t, c]) => `${t}: ${c}`)

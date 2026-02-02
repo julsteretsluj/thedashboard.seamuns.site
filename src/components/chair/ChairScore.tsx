@@ -11,24 +11,24 @@ export default function ChairScore() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="font-serif text-2xl text-[var(--text)] mb-1">📊 Score</h2>
+        <h2 className="font-semibold text-2xl text-[var(--text)] mb-1">📊 Score</h2>
         <p className="text-[var(--text-muted)] text-sm">Motions and points summary.</p>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="card-block p-4 text-center">
-          <div className="text-2xl font-serif text-[var(--success)]">{passed}</div>
+          <div className="text-2xl font-semibold text-[var(--success)]">{passed}</div>
           <div className="text-xs text-[var(--text-muted)] mt-1">✓ Passed</div>
         </div>
         <div className="card-block p-4 text-center">
-          <div className="text-2xl font-serif text-[var(--danger)]">{failed}</div>
+          <div className="text-2xl font-semibold text-[var(--danger)]">{failed}</div>
           <div className="text-xs text-[var(--text-muted)] mt-1">✗ Failed</div>
         </div>
         <div className="card-block p-4 text-center">
-          <div className="text-2xl font-serif text-[var(--text-muted)]">{tabled}</div>
+          <div className="text-2xl font-semibold text-[var(--text-muted)]">{tabled}</div>
           <div className="text-xs text-[var(--text-muted)] mt-1">— Tabled</div>
         </div>
         <div className="card-block p-4 text-center">
-          <div className="text-2xl font-serif text-[var(--accent)]">{motions.length}</div>
+          <div className="text-2xl font-semibold text-[var(--accent)]">{motions.length}</div>
           <div className="text-xs text-[var(--text-muted)] mt-1">◇ Total</div>
         </div>
       </div>
