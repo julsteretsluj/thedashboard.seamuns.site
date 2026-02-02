@@ -2,7 +2,7 @@
 
 This repo contains two apps:
 
-1. **MUN Dashboard** (root) — Chair Room & Delegate Dashboard (Vite + React)
+1. **SEAMUNs Dashboard** (root) — Chair Room & Delegate Dashboard (Vite + React)
 2. **Auth0 Next.js app** (`auth0-nextjs-app/`) — Next.js 15 + Auth0 login
 
 Follow the steps below for the app(s) you want to run.
@@ -29,7 +29,7 @@ If you already have the folder, just open a terminal in that folder.
 
 ---
 
-## Part 2: MUN Dashboard (Chair & Delegate)
+## Part 2: SEAMUNs Dashboard (Chair & Delegate)
 
 Runs at **http://localhost:5173**. No Auth0 or backend required.
 
@@ -60,14 +60,39 @@ Open **http://localhost:5173**.
 - **Chair Room** — Digital room, delegates, motions, voting, speakers, crisis, archive
 - **Delegate Dashboard** — Country, matrix, prep, checklist, countdown
 
-### Step 2.5 — Build for production (optional)
+### Step 2.5 — Auth0 login (optional)
+
+To show **Log in** / **Log out** in the dashboard header:
+
+1. In [Auth0 Dashboard](https://manage.auth0.com/dashboard/), create a **Single Page Application** (not Regular Web Application).
+2. In **Settings** for that application:
+   - **Allowed Callback URLs:** `http://localhost:5173` (and your production URL, e.g. `https://thedashboard.seamuns.site`)
+   - **Allowed Logout URLs:** `http://localhost:5173` (and your production URL)
+   - **Allowed Web Origins:** `http://localhost:5173` (and your production URL)
+3. Copy **Domain** and **Client ID** (no Client Secret for SPA).
+4. In the project root, copy the env example and fill in values:
+
+```bash
+cp .env.example .env.local
+```
+
+Edit `.env.local` and set:
+
+- `VITE_AUTH0_DOMAIN=your-tenant.auth0.com`
+- `VITE_AUTH0_CLIENT_ID=your_client_id`
+
+5. Restart the dev server (`npm run dev`). You should see **Log in** in the header; after login, your name and **Log out** appear.
+
+If `VITE_AUTH0_DOMAIN` and `VITE_AUTH0_CLIENT_ID` are not set, the dashboard runs without the login section.
+
+### Step 2.6 — Build for production (optional)
 
 ```bash
 npm run build
 npm run preview
 ```
 
-Then serve the **`dist/`** folder from your host. Do not open `index.html` with `file://` or a plain static server — use `npm run dev` locally or deploy `dist/` with a proper server.
+Then serve the **`dist/`** folder from your host. Do not open `index.html` with `file://` or a plain static server — use `npm run dev` locally or deploy `dist/` with a proper server. For production Auth0, add your live URLs to Allowed Callback / Logout / Web Origins and set the same `VITE_AUTH0_*` in your build environment.
 
 ---
 
@@ -94,7 +119,7 @@ npm install
 1. Go to [Auth0 Dashboard](https://manage.auth0.com/dashboard/).
 2. Sign in or create an account.
 3. **Applications** → **Create Application**.
-4. Name it (e.g. “MUN Dashboard”), choose **Regular Web Application** → **Create**.
+4. Name it (e.g. “SEAMUNs Dashboard”), choose **Regular Web Application** → **Create**.
 
 ### Step 3.4 — Configure Auth0 URLs
 
@@ -164,14 +189,14 @@ Open **http://localhost:3000**. Click **Log In** to sign in with Auth0.
 
 | App | Folder | Command | URL |
 |-----|--------|---------|-----|
-| MUN Dashboard | repo root | `npm run dev` | http://localhost:5173 |
+| SEAMUNs Dashboard | repo root | `npm run dev` | http://localhost:5173 |
 | Auth0 Next.js | `auth0-nextjs-app/` | `npm run dev` | http://localhost:3000 |
 
 ---
 
 ## Troubleshooting
 
-- **MUN Dashboard: “MIME type text/plain”**  
+- **SEAMUNs Dashboard: “MIME type text/plain”**  
   Don’t open `index.html` directly. Use `npm run dev` or deploy the built `dist/` folder.
 
 - **Auth0: “Configuration error”**  
@@ -181,4 +206,4 @@ Open **http://localhost:3000**. Click **Log In** to sign in with Auth0.
   In Auth0, ensure **Allowed Callback URLs** includes exactly `http://localhost:3000/auth/callback` (and **Allowed Logout URLs** / **Web Origins** as in Step 3.4).
 
 - **`package.json not found`**  
-  Run commands from the correct folder: repo root for MUN Dashboard, `auth0-nextjs-app` for the Auth0 app.
+  Run commands from the correct folder: repo root for SEAMUNs Dashboard, `auth0-nextjs-app` for the Auth0 app.

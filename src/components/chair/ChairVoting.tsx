@@ -17,7 +17,7 @@ export default function ChairVoting() {
           <h2 className="font-serif text-2xl text-[var(--text)] mb-1">🗳️ Voting</h2>
           <p className="text-[var(--text-muted)] text-sm">Start a vote from a motion in Motions & Points.</p>
         </div>
-        <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-8 text-center text-[var(--text-muted)]">
+        <div className="card-block p-8 text-center text-[var(--text-muted)]">
           🗳️ No active vote. Go to Motions & Points and click &quot;Vote&quot; on a motion.
         </div>
       </div>
@@ -54,7 +54,7 @@ export default function ChairVoting() {
         </button>
       </div>
 
-      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] overflow-hidden">
+      <div className="card-block overflow-hidden">
         <div className="px-4 py-3 border-b border-[var(--border)]">
           <h3 className="text-sm font-medium text-[var(--text)]">👥 Delegate votes</h3>
         </div>

@@ -54,7 +54,7 @@ export default function ChairDelegates() {
         <p className="text-[var(--text-muted)] text-sm">Add or remove delegates. Use traditional allocation or custom.</p>
       </div>
 
-      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-4 space-y-4">
+      <div className="card-block p-4 space-y-4">
         <h3 className="text-sm font-medium text-[var(--text)]">➕ Add delegate</h3>
         <div className="flex flex-wrap gap-3 items-end">
           <label className="flex flex-col gap-1">
@@ -127,7 +127,7 @@ export default function ChairDelegates() {
         </div>
       )}
 
-      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] overflow-hidden">
+      <div className="card-block overflow-hidden">
         <div className="px-4 py-3 border-b border-[var(--border)] flex items-center gap-2">
           <User className="w-4 h-4 text-[var(--text-muted)]" />
           <span className="text-sm font-medium text-[var(--text)]">👥 Current delegates ({delegates.length})</span>

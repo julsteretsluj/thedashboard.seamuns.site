@@ -9,7 +9,7 @@ export default function DelegateCountry() {
         <h2 className="font-serif text-2xl text-[var(--text)] mb-1">🌍 Country assignment</h2>
         <p className="text-[var(--text-muted)] text-sm">Your country and brief stance overview for this conference.</p>
       </div>
-      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-4 space-y-4">
+      <div className="card-block p-4 space-y-4">
         <label className="block">
           <span className="text-xs text-[var(--text-muted)] block mb-1">Conference name</span>
           <input

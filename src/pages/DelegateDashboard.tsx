@@ -32,16 +32,16 @@ function DelegateDashboardContent() {
   const [active, setActive] = useState('country')
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-[calc(100vh-3.5rem)]">
+    <div className="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
       <aside className="lg:w-56 border-b lg:border-b-0 lg:border-r border-[var(--border)] bg-[var(--bg-elevated)] flex-shrink-0 overflow-x-auto">
         <div className="flex lg:flex-col gap-1 p-2">
           {sections.map(({ id, label, icon: Icon }) => (
             <button
               key={id}
               onClick={() => setActive(id)}
-              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors w-full text-left ${
+              className={`flex items-center gap-2 px-3 py-2 rounded-[var(--radius-pill)] text-sm font-medium transition-colors w-full text-left ${
                 active === id
-                  ? 'bg-[var(--gold-soft)] text-[var(--gold)]'
+                  ? 'bg-[var(--gold)] text-[var(--bg-base)] shadow-sm'
                   : 'text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--bg-card)]'
               }`}
             >
@@ -67,7 +67,7 @@ function DelegateDashboardContent() {
 export default function DelegateDashboard() {
   return (
     <DelegateProvider>
-      <div className="border-b border-[var(--border)] bg-[var(--bg-elevated)] px-4 py-3 flex items-center gap-3">
+      <div className="border-b border-[var(--border)] bg-[var(--bg-elevated)] px-4 py-3 flex items-center gap-3 shadow-[0_1px_0_0_var(--border)]">
         <div className="w-10 h-10 rounded-xl bg-[var(--gold-soft)] flex items-center justify-center">
           <User className="w-5 h-5 text-[var(--gold)]" />
         </div>

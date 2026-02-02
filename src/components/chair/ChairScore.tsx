@@ -15,24 +15,24 @@ export default function ChairScore() {
         <p className="text-[var(--text-muted)] text-sm">Motions and points summary.</p>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-4 text-center">
+        <div className="card-block p-4 text-center">
           <div className="text-2xl font-serif text-[var(--success)]">{passed}</div>
           <div className="text-xs text-[var(--text-muted)] mt-1">✓ Passed</div>
         </div>
-        <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-4 text-center">
+        <div className="card-block p-4 text-center">
           <div className="text-2xl font-serif text-[var(--danger)]">{failed}</div>
           <div className="text-xs text-[var(--text-muted)] mt-1">✗ Failed</div>
         </div>
-        <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-4 text-center">
+        <div className="card-block p-4 text-center">
           <div className="text-2xl font-serif text-[var(--text-muted)]">{tabled}</div>
           <div className="text-xs text-[var(--text-muted)] mt-1">— Tabled</div>
         </div>
-        <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-4 text-center">
+        <div className="card-block p-4 text-center">
           <div className="text-2xl font-serif text-[var(--accent)]">{motions.length}</div>
           <div className="text-xs text-[var(--text-muted)] mt-1">◇ Total</div>
         </div>
       </div>
-      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-4">
+      <div className="card-block p-4">
         <h3 className="text-sm font-medium text-[var(--text)] mb-2">▸ Breakdown</h3>
         <p className="text-sm text-[var(--text-muted)]">
           Motions: {motionsCount} · Points: {pointsCount}

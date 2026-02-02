@@ -23,7 +23,7 @@ export default function ChairMotions() {
         <p className="text-[var(--text-muted)] text-sm">Record and star motions and points.</p>
       </div>
 
-      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-4 space-y-3">
+      <div className="card-block p-4 space-y-3">
         <div className="flex gap-2">
           <button
             onClick={() => setType('motion')}
@@ -110,7 +110,7 @@ export default function ChairMotions() {
         </div>
       )}
 
-      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] overflow-hidden">
+      <div className="card-block overflow-hidden">
         <div className="px-4 py-3 border-b border-[var(--border)]">
           <h3 className="text-sm font-medium text-[var(--text)]">📋 Log</h3>
         </div>

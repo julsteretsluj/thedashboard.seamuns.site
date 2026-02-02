@@ -13,7 +13,7 @@ export default function ChairRoomView() {
           {committee} — {topic}
         </p>
       </div>
-      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-6 min-h-[320px]">
+      <div className="card-block p-6 min-h-[320px]">
         {delegates.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-64 text-[var(--text-muted)]">
             <p className="text-sm">👥 No delegates in the room yet.</p>

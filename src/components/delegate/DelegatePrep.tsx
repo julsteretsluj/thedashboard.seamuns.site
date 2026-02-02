@@ -9,7 +9,7 @@ export default function DelegatePrep() {
         <h2 className="font-serif text-2xl text-[var(--text)] mb-1">📝 Prep template</h2>
         <p className="text-[var(--text-muted)] text-sm">Use this template to structure your research and speaking prep.</p>
       </div>
-      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-6 space-y-4">
+      <div className="card-block p-6 space-y-4">
         <section>
           <h3 className="text-sm font-medium text-[var(--gold)] mb-2">🌍 Country</h3>
           <p className="text-sm text-[var(--text)]">{country || '—'}</p>

@@ -59,7 +59,7 @@ export default function ChairCrisis() {
           </button>
         ))}
       </div>
-      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-4 space-y-3">
+      <div className="card-block p-4 space-y-3">
         <div className="flex gap-2">
           <input
             type="text"

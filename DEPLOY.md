@@ -1,4 +1,4 @@
-# Deploy MUN Dashboard (thedashboard.seamuns.site)
+# Deploy SEAMUNs Dashboard (thedashboard.seamuns.site)
 
 The **"Failed to load module script" (MIME type text/plain)** and **favicon 404** errors happen when the host serves the **source** (repo root) instead of the **built** app. Fix: deploy the **`dist/`** folder after building.
 
@@ -121,9 +121,91 @@ Then rebuild and redeploy.
 
 ---
 
+### Hostinger
+
+Hostinger uses **public_html** as the document root. Deploy the **built** site (contents of `dist/`), not the source.
+
+**Steps:**
+
+1. **Build locally**
+   ```bash
+   npm run build
+   ```
+   The built site is in the **`dist/`** folder (`index.html`, `favicon.svg`, `assets/`, `.htaccess`).
+
+2. **Open Hostinger**
+   - Log in to **hPanel** (or cPanel).
+   - Go to **Websites** → your domain → **File Manager** (or “Manage” → “Files”).
+   - Open **public_html** for that domain. This is the document root; anything you put here is served at `https://yourdomain.com/`.
+
+3. **Upload the built files**
+   - **Option A:** Upload **everything inside** `dist/` into `public_html`:
+     - `index.html` (root of public_html)
+     - `favicon.svg` (root of public_html)
+     - `.htaccess` (root of public_html)
+     - `assets/` folder (with the `.js` and `.css` files inside)
+   - **Option B:** Clear `public_html` first (keep a backup), then upload the contents of `dist/` so that `public_html` contains only those files.
+
+   Do **not** upload the project root or `src/`. Only the **contents** of `dist/`. The `.htaccess` in `dist/` sets correct MIME types and SPA fallback.
+
+4. **Domain**
+   - If this is the main domain for the hosting account, `public_html` is already the root.
+   - If you added a subdomain or another domain (e.g. thedashboard.seamuns.site), open **public_html** for that domain (e.g. `public_html` inside that domain’s folder) and upload the same contents there.
+
+5. **Updates**
+   - Run `npm run build` again locally, then re-upload the contents of `dist/` to `public_html` (overwrite existing files). Or use FTP/SSH if you prefer.
+
+**If you see the “main.tsx” MIME error:** The server is serving the wrong folder. Ensure only the **contents of dist/** are in `public_html` (you should see `index.html`, `favicon.svg`, `assets/`, `.htaccess` at the top level, and no `src/` or `main.tsx`).
+
+**If you see 404s for `assets/...` or `favicon.svg`:** The built files are missing or in the wrong place. In Hostinger File Manager, open `public_html` and confirm you have `index.html`, `favicon.svg`, `.htaccess`, and an `assets/` folder with the `.js` and `.css` files. If anything is missing, re-run the Hostinger Git deploy (or re-upload the full contents of `dist/`). Open the site at the root URL (e.g. `https://yourdomain.com/`), not a subpath, unless you’ve set `base` in `vite.config.ts`.
+
+#### Hostinger via GitHub (auto deploy)
+
+You can deploy through GitHub so that every push to `main` builds the site and updates Hostinger automatically.
+
+**1. Hostinger – connect Git**
+
+- In **hPanel** go to **Websites** → your site → **Manage** → **Advanced** → **Git**.
+- Under **Create a repository** (or **Manage Repositories**):
+  - **Repository:** your repo URL (e.g. `https://github.com/julsteretsluj/thedashboard.seamuns.site.git` for public, or SSH URL for private).
+  - **Branch:** `hostinger-build` (must match the branch the workflow pushes to).
+  - **Install path:** leave empty to deploy into `public_html`, or enter a subfolder.
+- Enable **Auto Deployment** and copy the **Webhook URL** (you’ll add it in GitHub).
+- If the repo is **private:** in the same Git section, generate an **SSH key**, copy the **public** key, and add it in GitHub: repo → **Settings** → **Deploy keys** → **Add deploy key** (paste key, no write access).
+
+**2. GitHub – webhook**
+
+- Repo → **Settings** → **Webhooks** → **Add webhook**.
+- **Payload URL:** paste the Hostinger Webhook URL.
+- **Content type:** `application/x-www-form-urlencoded`.
+- **Events:** choose **Just the push event**.
+- Save.
+
+**3. This repo – workflow**
+
+The workflow **Build and push to Hostinger branch** (`.github/workflows/deploy-hostinger.yml`) already:
+
+- Runs on every push to `main`.
+- Runs `npm ci` and `npm run build`.
+- Pushes the **contents of `dist/`** to the branch **`hostinger-build`** (so that branch only contains the built site).
+
+When the workflow pushes to `hostinger-build`, GitHub sends the webhook to Hostinger, which pulls that branch into `public_html`. No manual upload needed after the first setup.
+
+**4. First deploy**
+
+- Push to `main` once (or run the workflow manually from the **Actions** tab). Wait for the workflow to finish so that the `hostinger-build` branch exists.
+- In Hostinger Git, click **Deploy** (or **Pull**) so it pulls `hostinger-build` into `public_html`. After that, Auto Deployment will pull on every webhook.
+
+**Note:** If you use **only** Hostinger (not GitHub Pages), you can leave the GitHub Pages workflow as-is or disable it in **Settings** → **Pages** → Source.
+
+---
+
 ## 3. Custom domain (e.g. thedashboard.seamuns.site)
 
-- **GitHub Pages:** Settings → Pages → Custom domain → set `thedashboard.seamuns.site` and follow DNS instructions.
+**Use one host for the domain.** You can’t have `thedashboard.seamuns.site` pointing to both GitHub Pages and Hostinger. Choose where the site lives, then point DNS only there.
+
+- **GitHub Pages:** Settings → Pages → Custom domain → set `thedashboard.seamuns.site` and follow GitHub’s DNS instructions (e.g. A records or CNAME to `username.github.io`). If you see “Domain does not resolve to the GitHub Pages server,” the domain’s DNS is still pointing elsewhere (e.g. Hostinger)—update DNS at your domain registrar to match GitHub’s docs, then “Check again.”
+- **Hostinger:** In hPanel, add the domain or subdomain and use the DNS/Hostinger nameservers Hostinger gives you so the domain points to Hostinger. Don’t set this same domain as a custom domain on GitHub Pages.
 - **Netlify / Vercel:** Add the domain in the dashboard and point DNS as instructed.
 
 No change to Vite is needed if the site is served at the root of that domain (`https://thedashboard.seamuns.site/`). Only set `base` in `vite.config.ts` if the app is served in a subpath (e.g. `https://example.com/thedashboard.seamuns.site/`).
@@ -220,6 +302,6 @@ Example: if the doc root is `public_html`, upload the **contents** of `dist/` in
 
 If you see **two** workflows running on each push (e.g. “Deploy to GitHub Pages” and “Deploy Next.js site to Pages”):
 
-- We only want to deploy the **MUN Dashboard** (Vite app in the repo root), not the Next.js app in `auth0-nextjs-app/`.
+- We only want to deploy the **SEAMUNs Dashboard** (Vite app in the repo root), not the Next.js app in `auth0-nextjs-app/`.
 - **Remove or disable** the “Deploy Next.js site to Pages” (or any other Pages) workflow: repo → **Actions** → click that workflow → **⋯** (top right) → **Delete workflow**, or delete its file under **.github/workflows/** in the repo.
 - Keep only **Deploy to GitHub Pages**, which builds the root app and deploys `dist/`.

@@ -37,7 +37,7 @@ export default function DelegateCountdown() {
         <h2 className="font-serif text-2xl text-[var(--text)] mb-1">⏱️ Conference countdown</h2>
         <p className="text-[var(--text-muted)] text-sm">Set the conference start date and see time remaining.</p>
       </div>
-      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-4 space-y-4">
+      <div className="card-block p-4 space-y-4">
         <label className="block">
           <span className="text-xs text-[var(--text-muted)] block mb-1">Conference start (date & time)</span>
           <input
@@ -56,19 +56,19 @@ export default function DelegateCountdown() {
       </div>
       {diff && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-4 text-center">
+          <div className="card-block p-4 text-center">
             <div className="text-2xl font-serif text-[var(--gold)]">{diff.days}</div>
             <div className="text-xs text-[var(--text-muted)] mt-1">📅 Days</div>
           </div>
-          <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-4 text-center">
+          <div className="card-block p-4 text-center">
             <div className="text-2xl font-serif text-[var(--gold)]">{diff.hours}</div>
             <div className="text-xs text-[var(--text-muted)] mt-1">🕐 Hours</div>
           </div>
-          <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-4 text-center">
+          <div className="card-block p-4 text-center">
             <div className="text-2xl font-serif text-[var(--gold)]">{diff.minutes}</div>
             <div className="text-xs text-[var(--text-muted)] mt-1">⏱️ Minutes</div>
           </div>
-          <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-4 text-center">
+          <div className="card-block p-4 text-center">
             <div className="text-2xl font-serif text-[var(--gold)]">{diff.seconds}</div>
             <div className="text-xs text-[var(--text-muted)] mt-1">⏲️ Seconds</div>
           </div>

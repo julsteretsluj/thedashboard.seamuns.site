@@ -1,20 +1,77 @@
 @import "tailwindcss";
 
+/* SEAMUNs UI — aligned with seamuns.site (conference-style layout, pills, cards) */
 :root {
-  --bg-base: #0c0e12;
-  --bg-elevated: #14171f;
-  --bg-card: #1a1e28;
-  --border: #2a3040;
-  --text: #e8eaef;
+  --bg-base: #0f1117;
+  --bg-elevated: #181b24;
+  --bg-card: #1c1f2a;
+  --border: #2d3340;
+  --text: #eaecef;
   --text-muted: #8b92a4;
-  --accent: #3b82f6;
-  --accent-soft: rgba(59, 130, 246, 0.15);
+  --brand: #2563eb;
+  --brand-soft: rgba(37, 99, 235, 0.18);
+  --accent: #2563eb;
+  --accent-soft: rgba(37, 99, 235, 0.18);
   --gold: #d4a853;
-  --gold-soft: rgba(212, 168, 83, 0.15);
+  --gold-soft: rgba(212, 168, 83, 0.18);
   --success: #22c55e;
   --danger: #ef4444;
   --font-sans: "DM Sans", system-ui, sans-serif;
   --font-serif: "Instrument Serif", Georgia, serif;
+  /* seamuns-style radii and spacing */
+  --radius-card: 1rem;
+  --radius-pill: 9999px;
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Topic themes (seamuns-style) */
+[data-theme="health"] {
+  --brand: #0d9488;
+  --brand-soft: rgba(13, 148, 136, 0.18);
+  --accent: #0d9488;
+  --accent-soft: rgba(13, 148, 136, 0.18);
+}
+[data-theme="war"] {
+  --brand: #b91c1c;
+  --brand-soft: rgba(185, 28, 28, 0.18);
+  --accent: #b91c1c;
+  --accent-soft: rgba(185, 28, 28, 0.18);
+}
+[data-theme="women"] {
+  --brand: #a855f7;
+  --brand-soft: rgba(168, 85, 247, 0.18);
+  --accent: #a855f7;
+  --accent-soft: rgba(168, 85, 247, 0.18);
+}
+[data-theme="nature"] {
+  --brand: #16a34a;
+  --brand-soft: rgba(22, 163, 74, 0.18);
+  --accent: #16a34a;
+  --accent-soft: rgba(22, 163, 74, 0.18);
+}
+[data-theme="peace"] {
+  --brand: #0284c7;
+  --brand-soft: rgba(2, 132, 199, 0.18);
+  --accent: #0284c7;
+  --accent-soft: rgba(2, 132, 199, 0.18);
+}
+[data-theme="economy"] {
+  --brand: #d97706;
+  --brand-soft: rgba(217, 119, 6, 0.18);
+  --accent: #d97706;
+  --accent-soft: rgba(217, 119, 6, 0.18);
+}
+[data-theme="education"] {
+  --brand: #4f46e5;
+  --brand-soft: rgba(79, 70, 229, 0.18);
+  --accent: #4f46e5;
+  --accent-soft: rgba(79, 70, 229, 0.18);
+}
+[data-theme="rights"] {
+  --brand: #dc2626;
+  --brand-soft: rgba(220, 38, 38, 0.18);
+  --accent: #dc2626;
+  --accent-soft: rgba(220, 38, 38, 0.18);
 }
 
 * {
@@ -36,6 +93,32 @@ body {
 
 .font-serif {
   font-family: var(--font-serif);
+}
+
+/* Section heading (seamuns-style: bold title + optional subtitle) */
+.section-heading {
+  margin-bottom: 0.25rem;
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--text);
+}
+.section-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+/* Card block (seamuns-style content blocks) */
+.card-block {
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-card);
+}
+
+/* Pill / filter style (seamuns-style nav and filters) */
+.pill {
+  border-radius: var(--radius-pill);
 }
 
 /* Scrollbar */

@@ -18,7 +18,7 @@ export default function DelegateChecklist() {
         <h2 className="font-serif text-2xl text-[var(--text)] mb-1">✅ Checklist</h2>
         <p className="text-[var(--text-muted)] text-sm">Track your prep: position paper, research, speeches.</p>
       </div>
-      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-4 space-y-2">
+      <div className="card-block p-4 space-y-2">
         {items.map(({ key, label }) => (
           <label
             key={key}

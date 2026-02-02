@@ -67,7 +67,7 @@ export default function ChairSpeakers() {
         )}
       </div>
 
-      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-4 space-y-3">
+      <div className="card-block p-4 space-y-3">
         <h3 className="text-sm font-medium text-[var(--text)]">⏱️ Speaker duration (seconds)</h3>
         <input
           type="number"
@@ -79,7 +79,7 @@ export default function ChairSpeakers() {
         />
       </div>
 
-      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-4 space-y-3">
+      <div className="card-block p-4 space-y-3">
         <h3 className="text-sm font-medium text-[var(--text)]">➕ Add to speakers list</h3>
         <div className="flex flex-wrap gap-2">
           <select
@@ -104,7 +104,7 @@ export default function ChairSpeakers() {
         </div>
       </div>
 
-      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] overflow-hidden">
+      <div className="card-block overflow-hidden">
         <div className="px-4 py-3 border-b border-[var(--border)]">
           <h3 className="text-sm font-medium text-[var(--text)]">📋 Mod speakers list</h3>
         </div>

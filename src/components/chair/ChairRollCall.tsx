@@ -25,7 +25,7 @@ export default function ChairRollCall() {
           <span className="text-sm text-[var(--text)]">Roll call complete</span>
         </label>
       </div>
-      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] overflow-hidden">
+      <div className="card-block overflow-hidden">
         <div className="px-4 py-3 border-b border-[var(--border)] flex items-center justify-between">
           <h3 className="text-sm font-medium text-[var(--text)]">👥 Delegates</h3>
           <span className="text-xs text-[var(--text-muted)]">

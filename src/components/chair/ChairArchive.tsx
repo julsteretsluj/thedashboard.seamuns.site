@@ -29,7 +29,7 @@ export default function ChairArchive() {
         <h2 className="font-serif text-2xl text-[var(--text)] mb-1">📁 Archive</h2>
         <p className="text-[var(--text-muted)] text-sm">Position papers, chair reports, slides, speeches, prep docs.</p>
       </div>
-      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-4 space-y-4">
+      <div className="card-block p-4 space-y-4">
         <h3 className="text-sm font-medium text-[var(--text)]">➕ Add to archive</h3>
         <div className="flex flex-wrap gap-2">
           {archiveTypes.map(({ id, label, icon: Icon }) => (
@@ -67,7 +67,7 @@ export default function ChairArchive() {
           </button>
         </div>
       </div>
-      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] overflow-hidden">
+      <div className="card-block overflow-hidden">
         <div className="px-4 py-3 border-b border-[var(--border)]">
           <h3 className="text-sm font-medium text-[var(--text)]">📁 Archive</h3>
         </div>

@@ -1,6 +1,6 @@
-# MUN Dashboard
+# SEAMUNs Dashboard
 
-An interactive, modern dashboard for **MUN Chairs** and **Delegates** — run committee sessions and prepare for conferences.
+An interactive, modern dashboard for **MUN chairs** and **delegates** — run committee sessions and prepare for conferences.
 
 ## Quick start
 
