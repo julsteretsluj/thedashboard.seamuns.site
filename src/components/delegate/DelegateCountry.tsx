@@ -49,18 +49,22 @@ export default function DelegateCountry() {
           Add dates when registering your stance. Countdowns will appear here and in the ⏱️ Conference & position paper countdown section.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <label className="block">
+          <label className="block" htmlFor="stance-conference-start">
             <span className="text-xs text-[var(--text-muted)] block mb-1">Conference start (date & time)</span>
             <input
+              id="stance-conference-start"
+              name="conference-start"
               type="datetime-local"
               value={countdownDate ? countdownDate.slice(0, 16) : ''}
               onChange={(e) => setCountdownDate(e.target.value ? new Date(e.target.value).toISOString() : '')}
               className="w-full px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
             />
           </label>
-          <label className="block">
+          <label className="block" htmlFor="stance-conference-end">
             <span className="text-xs text-[var(--text-muted)] block mb-1">Conference end (date & time)</span>
             <input
+              id="stance-conference-end"
+              name="conference-end"
               type="datetime-local"
               value={conferenceEndDate ? conferenceEndDate.slice(0, 16) : ''}
               onChange={(e) => setConferenceEndDate(e.target.value ? new Date(e.target.value).toISOString() : '')}
@@ -68,9 +72,11 @@ export default function DelegateCountry() {
             />
           </label>
         </div>
-        <label className="block">
+        <label className="block" htmlFor="stance-conference-duration">
           <span className="text-xs text-[var(--text-muted)] block mb-1">Duration (days) — sets end from start</span>
           <input
+            id="stance-conference-duration"
+            name="conference-duration-days"
             type="number"
             min={0}
             max={31}
@@ -83,9 +89,11 @@ export default function DelegateCountry() {
             className="w-24 px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
           />
         </label>
-        <label className="block">
+        <label className="block" htmlFor="stance-position-paper-deadline">
           <span className="text-xs text-[var(--text-muted)] block mb-1">Position paper deadline (date & time)</span>
           <input
+            id="stance-position-paper-deadline"
+            name="position-paper-deadline"
             type="datetime-local"
             value={positionPaperDeadline ? positionPaperDeadline.slice(0, 16) : ''}
             onChange={(e) =>
@@ -108,9 +116,11 @@ export default function DelegateCountry() {
         </div>
       </div>
       <div className="card-block p-4 space-y-4">
-        <label className="block">
+        <label className="block" htmlFor="stance-conference-name">
           <span className="text-xs text-[var(--text-muted)] block mb-1">Conference name</span>
           <input
+            id="stance-conference-name"
+            name="conference-name"
             type="text"
             value={conferenceName}
             onChange={(e) => setConferenceName(e.target.value)}
@@ -118,9 +128,11 @@ export default function DelegateCountry() {
             className="w-full px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--text-muted)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
           />
         </label>
-        <label className="block">
+        <label className="block" htmlFor="stance-country">
           <span className="text-xs text-[var(--text-muted)] block mb-1">Country</span>
           <input
+            id="stance-country"
+            name="country"
             type="text"
             value={country}
             onChange={(e) => setCountry(e.target.value)}
@@ -128,9 +140,11 @@ export default function DelegateCountry() {
             className="w-full px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--text-muted)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
           />
         </label>
-        <label className="block">
+        <label className="block" htmlFor="stance-delegate-email">
           <span className="text-xs text-[var(--text-muted)] block mb-1">Your email (optional)</span>
           <input
+            id="stance-delegate-email"
+            name="delegate-email"
             type="email"
             value={delegateEmail}
             onChange={(e) => setDelegateEmail(e.target.value)}
@@ -139,9 +153,11 @@ export default function DelegateCountry() {
             aria-label="Your email"
           />
         </label>
-        <label className="block">
+        <label className="block" htmlFor="stance-overview">
           <span className="text-xs text-[var(--text-muted)] block mb-1">Brief stance overview</span>
           <textarea
+            id="stance-overview"
+            name="stance-overview"
             value={stanceOverview}
             onChange={(e) => setStanceOverview(e.target.value)}
             placeholder="Summarize your country's position on the committee topic(s)..."
