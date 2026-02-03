@@ -140,7 +140,7 @@ const sections = [
   { id: 'links', label: '🔗 Official links', icon: LinkIcon },
   { id: 'resources', label: '📚 Chair Report & Resources', icon: BookOpen },
   { id: 'checklist', label: '✅ Checklist', icon: CheckSquare },
-  { id: 'countdown', label: '⏱️ Conference Countdown', icon: Clock },
+  { id: 'countdown', label: '⏱️ Conference & position paper countdown', icon: Clock },
 ]
 
 function DelegateDashboardContent() {

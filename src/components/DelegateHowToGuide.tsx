@@ -8,7 +8,7 @@ const DELEGATE_STEPS = [
   { step: 4, title: 'Trusted & nation sources', body: 'In 🔗 Trusted & Nation Sources, add links and sources you use for research and country policy.' },
   { step: 5, title: 'Checklist', body: 'In ✅ Checklist, tick off research, position paper, speeches, and materials. The checklist follows the sections of the MUN Prep Template.' },
   { step: 6, title: 'Chair report & resources', body: 'In 📚 Chair Report & Resources, add handbook, position paper guidelines, and any uploaded resources from your chair.' },
-  { step: 7, title: 'Conference countdown', body: 'Set your ⏱️ Conference Countdown date to see time left until the conference.' },
+  { step: 7, title: 'Conference & position paper countdown', body: 'In ⏱️ Conference & position paper countdown (or on 🌍 Country & Stance) set conference start/end and position paper due date to see countdowns.' },
   { step: 8, title: 'Save to account', body: 'Sign in and use "Save to account" to store your conferences and data across devices. You can add multiple conferences and switch between them.' },
 ]
 

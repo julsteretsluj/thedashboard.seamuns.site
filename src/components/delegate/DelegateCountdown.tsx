@@ -71,7 +71,13 @@ export function CompactCountdownCards() {
   const formatShort = (d: NonNullable<Diff>) =>
     `${d.days}d ${d.hours}h ${d.minutes}m ${d.seconds}s`
 
-  if (!diff && !diffPaper) return null
+  if (!diff && !diffPaper) {
+    return (
+      <p className="text-sm text-[var(--text-muted)] mb-4">
+        Set conference start and/or position paper deadline below to see countdowns.
+      </p>
+    )
+  }
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
@@ -141,6 +147,8 @@ export default function DelegateCountdown() {
       </div>
 
       <div className="card-block p-4 space-y-4">
+        <h3 className="font-medium text-lg text-[var(--text)]">📄 Position paper countdown</h3>
+        <p className="text-[var(--text-muted)] text-sm">Set the position paper due date to see time remaining.</p>
         <label className="block">
           <span className="text-xs text-[var(--text-muted)] block mb-1">Position paper due (date & time)</span>
           <input

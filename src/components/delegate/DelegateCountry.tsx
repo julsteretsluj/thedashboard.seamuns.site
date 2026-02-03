@@ -64,56 +64,61 @@ export default function DelegateCountry() {
           />
         </label>
 
-        <div>
-          <span className="text-xs text-[var(--text-muted)] block mb-2">Conference dates</span>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <label className="block">
-              <span className="text-xs text-[var(--text-muted)] block mb-1">Start (date & time)</span>
+        <div className="border border-[var(--border)] rounded-lg p-4 bg-[var(--bg-elevated)]/50 space-y-4">
+          <div>
+            <h3 className="font-medium text-[var(--text)] text-sm mb-0.5">Add dates when registering your stance</h3>
+            <p className="text-xs text-[var(--text-muted)]">Optionally set conference and position paper dates here; countdowns will show at the top and in ⏱️ Conference & position paper countdown.</p>
+          </div>
+          <div>
+            <span className="text-xs text-[var(--text-muted)] block mb-2">Conference dates</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <label className="block">
+                <span className="text-xs text-[var(--text-muted)] block mb-1">Start (date & time)</span>
+                <input
+                  type="datetime-local"
+                  value={countdownDate ? countdownDate.slice(0, 16) : ''}
+                  onChange={(e) => setCountdownDate(e.target.value ? new Date(e.target.value).toISOString() : '')}
+                  className="w-full px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                />
+              </label>
+              <label className="block">
+                <span className="text-xs text-[var(--text-muted)] block mb-1">End (date & time)</span>
+                <input
+                  type="datetime-local"
+                  value={conferenceEndDate ? conferenceEndDate.slice(0, 16) : ''}
+                  onChange={(e) => setConferenceEndDate(e.target.value ? new Date(e.target.value).toISOString() : '')}
+                  className="w-full px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                />
+              </label>
+            </div>
+            <label className="block mt-2">
+              <span className="text-xs text-[var(--text-muted)] block mb-1">Duration (days) — sets end from start</span>
               <input
-                type="datetime-local"
-                value={countdownDate ? countdownDate.slice(0, 16) : ''}
-                onChange={(e) => setCountdownDate(e.target.value ? new Date(e.target.value).toISOString() : '')}
-                className="w-full px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
-              />
-            </label>
-            <label className="block">
-              <span className="text-xs text-[var(--text-muted)] block mb-1">End (date & time)</span>
-              <input
-                type="datetime-local"
-                value={conferenceEndDate ? conferenceEndDate.slice(0, 16) : ''}
-                onChange={(e) => setConferenceEndDate(e.target.value ? new Date(e.target.value).toISOString() : '')}
-                className="w-full px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                type="number"
+                min={0}
+                max={31}
+                value={durationDays || ''}
+                onChange={(e) => {
+                  const v = e.target.value ? parseInt(e.target.value, 10) : 0
+                  if (!Number.isNaN(v) && v >= 0) handleDurationDaysChange(v)
+                }}
+                placeholder="e.g. 2"
+                className="w-24 px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
               />
             </label>
           </div>
-          <label className="block mt-2">
-            <span className="text-xs text-[var(--text-muted)] block mb-1">Duration (days) — sets end from start</span>
+          <label className="block">
+            <span className="text-xs text-[var(--text-muted)] block mb-1">Position paper deadline (date & time)</span>
             <input
-              type="number"
-              min={0}
-              max={31}
-              value={durationDays || ''}
-              onChange={(e) => {
-                const v = e.target.value ? parseInt(e.target.value, 10) : 0
-                if (!Number.isNaN(v) && v >= 0) handleDurationDaysChange(v)
-              }}
-              placeholder="e.g. 2"
-              className="w-24 px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+              type="datetime-local"
+              value={positionPaperDeadline ? positionPaperDeadline.slice(0, 16) : ''}
+              onChange={(e) =>
+                setPositionPaperDeadline(e.target.value ? new Date(e.target.value).toISOString() : '')
+              }
+              className="w-full max-w-xs px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
             />
           </label>
         </div>
-
-        <label className="block">
-          <span className="text-xs text-[var(--text-muted)] block mb-1">Position paper deadline (date & time)</span>
-          <input
-            type="datetime-local"
-            value={positionPaperDeadline ? positionPaperDeadline.slice(0, 16) : ''}
-            onChange={(e) =>
-              setPositionPaperDeadline(e.target.value ? new Date(e.target.value).toISOString() : '')
-            }
-            className="w-full max-w-xs px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
-          />
-        </label>
 
         <label className="block">
           <span className="text-xs text-[var(--text-muted)] block mb-1">Country</span>
