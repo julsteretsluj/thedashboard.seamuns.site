@@ -4,7 +4,7 @@ import { Clock } from 'lucide-react'
 
 type Diff = { days: number; hours: number; minutes: number; seconds: number } | null
 
-function useCountdown(isoDate: string): Diff {
+export function useCountdown(isoDate: string): Diff {
   const [diff, setDiff] = useState<Diff>(null)
   useEffect(() => {
     if (!isoDate) {
@@ -62,22 +62,61 @@ function CountdownGrid({ diff, label }: { diff: NonNullable<Diff>; label: string
   )
 }
 
+/** Compact countdown cards for use on the first delegate page (Country & Stance). */
+export function CompactCountdownCards() {
+  const { countdownDate, positionPaperDeadline } = useDelegate()
+  const diff = useCountdown(countdownDate ?? '')
+  const diffPaper = useCountdown(positionPaperDeadline ?? '')
+
+  const formatShort = (d: NonNullable<Diff>) =>
+    `${d.days}d ${d.hours}h ${d.minutes}m ${d.seconds}s`
+
+  if (!diff && !diffPaper) return null
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+      {diff && (
+        <div className="card-block p-3 flex items-center gap-3">
+          <Clock className="w-5 h-5 text-[var(--accent)] flex-shrink-0" />
+          <div>
+            <div className="text-xs text-[var(--text-muted)]">Conference starts in</div>
+            <div className="text-sm font-semibold text-[var(--accent)]">{formatShort(diff)}</div>
+          </div>
+        </div>
+      )}
+      {diffPaper && (
+        <div className="card-block p-3 flex items-center gap-3">
+          <Clock className="w-5 h-5 text-[var(--accent)] flex-shrink-0" />
+          <div>
+            <div className="text-xs text-[var(--text-muted)]">Position paper due in</div>
+            <div className="text-sm font-semibold text-[var(--accent)]">{formatShort(diffPaper)}</div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function DelegateCountdown() {
   const {
     countdownDate,
     setCountdownDate,
+    conferenceEndDate,
+    setConferenceEndDate,
     positionPaperDeadline,
     setPositionPaperDeadline,
   } = useDelegate()
   const diff = useCountdown(countdownDate ?? '')
+  const diffEnd = useCountdown(conferenceEndDate ?? '')
   const diffPaper = useCountdown(positionPaperDeadline ?? '')
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="font-semibold text-2xl text-[var(--text)] mb-1">⏱️ Conference Countdown</h2>
-        <p className="text-[var(--text-muted)] text-sm">Set the conference start date and see time remaining.</p>
+        <h2 className="font-semibold text-2xl text-[var(--text)] mb-1">⏱️ Conference & position paper countdown</h2>
+        <p className="text-[var(--text-muted)] text-sm">Set conference start/end and position paper due date to see time remaining.</p>
       </div>
+
       <div className="card-block p-4 space-y-4">
         <label className="block">
           <span className="text-xs text-[var(--text-muted)] block mb-1">Conference start (date & time)</span>
@@ -88,13 +127,19 @@ export default function DelegateCountdown() {
             className="w-full max-w-xs px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
           />
         </label>
+        <label className="block">
+          <span className="text-xs text-[var(--text-muted)] block mb-1">Conference end (date & time)</span>
+          <input
+            type="datetime-local"
+            value={conferenceEndDate ? conferenceEndDate.slice(0, 16) : ''}
+            onChange={(e) => setConferenceEndDate(e.target.value ? new Date(e.target.value).toISOString() : '')}
+            className="w-full max-w-xs px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+          />
+        </label>
         {diff && <CountdownGrid diff={diff} label="⏳ Time until conference:" />}
+        {diffEnd && <CountdownGrid diff={diffEnd} label="⏳ Time until conference ends:" />}
       </div>
 
-      <div>
-        <h2 className="font-semibold text-2xl text-[var(--text)] mb-1">📄 Position Paper Deadline</h2>
-        <p className="text-[var(--text-muted)] text-sm">Set the position paper due date and see time remaining.</p>
-      </div>
       <div className="card-block p-4 space-y-4">
         <label className="block">
           <span className="text-xs text-[var(--text-muted)] block mb-1">Position paper due (date & time)</span>

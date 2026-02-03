@@ -1,11 +1,46 @@
 import { useDelegate } from '../../context/DelegateContext'
 import InfoPopover from '../InfoPopover'
+import { CompactCountdownCards } from './DelegateCountdown'
 
 export default function DelegateCountry() {
-  const { name: conferenceName, country, delegateEmail, stanceOverview, setName: setConferenceName, setCountry, setDelegateEmail, setStanceOverview } = useDelegate()
+  const {
+    name: conferenceName,
+    country,
+    delegateEmail,
+    stanceOverview,
+    countdownDate,
+    conferenceEndDate,
+    positionPaperDeadline,
+    setName: setConferenceName,
+    setCountry,
+    setDelegateEmail,
+    setStanceOverview,
+    setCountdownDate,
+    setConferenceEndDate,
+    setPositionPaperDeadline,
+  } = useDelegate()
+
+  const handleDurationDaysChange = (days: number) => {
+    if (days <= 0) {
+      setConferenceEndDate('')
+      return
+    }
+    if (!countdownDate) return
+    const start = new Date(countdownDate)
+    const end = new Date(start)
+    end.setDate(end.getDate() + days)
+    setConferenceEndDate(end.toISOString())
+  }
+
+  const durationDays =
+    countdownDate && conferenceEndDate
+      ? Math.round((new Date(conferenceEndDate).getTime() - new Date(countdownDate).getTime()) / 86400000)
+      : 0
 
   return (
     <div className="space-y-6">
+      <CompactCountdownCards />
+
       <div className="flex items-start gap-2">
         <div>
           <h2 className="font-semibold text-2xl text-[var(--text)] mb-1 flex items-center gap-1.5">
@@ -28,6 +63,58 @@ export default function DelegateCountry() {
             className="w-full px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--text-muted)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
           />
         </label>
+
+        <div>
+          <span className="text-xs text-[var(--text-muted)] block mb-2">Conference dates</span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <label className="block">
+              <span className="text-xs text-[var(--text-muted)] block mb-1">Start (date & time)</span>
+              <input
+                type="datetime-local"
+                value={countdownDate ? countdownDate.slice(0, 16) : ''}
+                onChange={(e) => setCountdownDate(e.target.value ? new Date(e.target.value).toISOString() : '')}
+                className="w-full px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+              />
+            </label>
+            <label className="block">
+              <span className="text-xs text-[var(--text-muted)] block mb-1">End (date & time)</span>
+              <input
+                type="datetime-local"
+                value={conferenceEndDate ? conferenceEndDate.slice(0, 16) : ''}
+                onChange={(e) => setConferenceEndDate(e.target.value ? new Date(e.target.value).toISOString() : '')}
+                className="w-full px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+              />
+            </label>
+          </div>
+          <label className="block mt-2">
+            <span className="text-xs text-[var(--text-muted)] block mb-1">Duration (days) — sets end from start</span>
+            <input
+              type="number"
+              min={0}
+              max={31}
+              value={durationDays || ''}
+              onChange={(e) => {
+                const v = e.target.value ? parseInt(e.target.value, 10) : 0
+                if (!Number.isNaN(v) && v >= 0) handleDurationDaysChange(v)
+              }}
+              placeholder="e.g. 2"
+              className="w-24 px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+            />
+          </label>
+        </div>
+
+        <label className="block">
+          <span className="text-xs text-[var(--text-muted)] block mb-1">Position paper deadline (date & time)</span>
+          <input
+            type="datetime-local"
+            value={positionPaperDeadline ? positionPaperDeadline.slice(0, 16) : ''}
+            onChange={(e) =>
+              setPositionPaperDeadline(e.target.value ? new Date(e.target.value).toISOString() : '')
+            }
+            className="w-full max-w-xs px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+          />
+        </label>
+
         <label className="block">
           <span className="text-xs text-[var(--text-muted)] block mb-1">Country</span>
           <input

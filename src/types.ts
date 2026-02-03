@@ -79,6 +79,8 @@ export interface DelegateConference {
   /** Committee matrix: committee, first name, delegation */
   committeeMatrixEntries: CommitteeMatrixEntry[]
   countdownDate: string
+  /** Conference end date/time (optional). */
+  conferenceEndDate: string
   /** Optional position paper deadline (date/time) for a second countdown. */
   positionPaperDeadline: string
   checklist: {
