@@ -1,9 +1,12 @@
 import { createContext, useContext, useState, useCallback, ReactNode } from 'react'
 import type { Delegate, DelegateStrike, DelegateFeedback, DelegateFeedbackType, Motion, Speaker } from '../types'
+import { getPresetDelegationFlag } from '../constants/delegationFlags'
 
 interface ChairState {
   committee: string
   topic: string
+  /** Optional universe for fictional committees (e.g. Star Wars, Harry Potter). Displayed before topic. */
+  universe: string
   sessionStarted: boolean
   sessionStartTime: string | null
   delegates: Delegate[]
@@ -23,11 +26,14 @@ interface ChairState {
   delegateVotes: Record<string, 'yes' | 'no' | 'abstain'>
   flowChecklist: Record<string, boolean>
   prepChecklist: Record<string, boolean>
+  /** Custom emoji per delegation (e.g. "FWC" -> "🏴"). Overrides preset flags. */
+  delegationEmojiOverrides: Record<string, string>
 }
 
 const defaultState: ChairState = {
   committee: 'UNSC',
   topic: 'Cybersecurity and International Peace',
+  universe: '',
   sessionStarted: false,
   sessionStartTime: null,
   delegates: [],
@@ -47,11 +53,13 @@ const defaultState: ChairState = {
   delegateVotes: {},
   flowChecklist: {},
   prepChecklist: {},
+  delegationEmojiOverrides: {},
 }
 
 type ChairContextValue = ChairState & {
   setCommittee: (c: string) => void
   setTopic: (t: string) => void
+  setUniverse: (u: string) => void
   startSession: () => void
   stopSession: () => void
   addDelegate: (d: Omit<Delegate, 'id'>) => void
@@ -85,6 +93,8 @@ type ChairContextValue = ChairState & {
   togglePrepStep: (stepId: string) => void
   isPrepStepDone: (stepId: string) => boolean
   resetPrepChecklist: () => void
+  setDelegationEmoji: (delegation: string, emoji: string | null) => void
+  getDelegationEmoji: (delegation: string) => string
 }
 
 const ChairContext = createContext<ChairContextValue | null>(null)
@@ -97,6 +107,9 @@ export function ChairProvider({ children }: { children: ReactNode }) {
   }, [])
   const setTopic = useCallback((topic: string) => {
     setState((s) => ({ ...s, topic }))
+  }, [])
+  const setUniverse = useCallback((universe: string) => {
+    setState((s) => ({ ...s, universe }))
   }, [])
   const startSession = useCallback(() => {
     setState((s) => ({
@@ -320,10 +333,25 @@ export function ChairProvider({ children }: { children: ReactNode }) {
     setState((s) => ({ ...s, prepChecklist: {} }))
   }, [])
 
+  const setDelegationEmoji = useCallback((delegation: string, emoji: string | null) => {
+    setState((s) => {
+      const next = { ...s.delegationEmojiOverrides }
+      if (emoji === null || emoji === '') delete next[delegation]
+      else next[delegation] = emoji
+      return { ...s, delegationEmojiOverrides: next }
+    })
+  }, [])
+  const getDelegationEmoji = useCallback((delegation: string): string => {
+    const override = state.delegationEmojiOverrides[delegation]
+    if (override !== undefined && override !== '') return override
+    return getPresetDelegationFlag(delegation)
+  }, [state.delegationEmojiOverrides])
+
   const value: ChairContextValue = {
     ...state,
     setCommittee,
     setTopic,
+    setUniverse,
     startSession,
     stopSession,
     addDelegate,
@@ -366,6 +394,8 @@ export function ChairProvider({ children }: { children: ReactNode }) {
     togglePrepStep,
     isPrepStepDone,
     resetPrepChecklist,
+    setDelegationEmoji,
+    getDelegationEmoji,
   }
 
   return <ChairContext.Provider value={value}>{children}</ChairContext.Provider>

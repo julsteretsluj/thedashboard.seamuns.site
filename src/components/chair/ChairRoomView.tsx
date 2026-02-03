@@ -14,9 +14,11 @@ export default function ChairRoomView() {
     delegates,
     committee,
     topic,
+    universe,
     getStrikeCountsByType,
     addDelegateFeedback,
     getFeedbackCountsByType,
+    getDelegationEmoji,
   } = useChair()
   const [openDelegateId, setOpenDelegateId] = useState<string | null>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -37,7 +39,8 @@ export default function ChairRoomView() {
       <div>
         <h2 className="font-semibold text-2xl text-[var(--text)] mb-1">🖥️ Digital Room View</h2>
         <p className="text-[var(--text-muted)] text-sm">
-          {committee} — {topic}
+          {committee}
+          {universe ? ` — ${universe} — ${topic}` : ` — ${topic}`}
         </p>
         <p className="text-xs text-[var(--text-muted)] mt-1">
           Click a delegate to give a compliment or concern reminder.
@@ -78,8 +81,9 @@ export default function ChairRoomView() {
                     aria-haspopup="menu"
                     aria-label={`${d.country} — give compliment or concern`}
                   >
-                    <div className="text-xs font-medium text-[var(--accent)] uppercase tracking-wide">
-                      {d.country}
+                    <div className="text-xs font-medium text-[var(--accent)] uppercase tracking-wide flex items-center justify-center gap-1">
+                      <span>{getDelegationEmoji(d.country) || '🏳️'}</span>
+                      <span>{d.country}</span>
                     </div>
                     <div className="text-sm text-[var(--text)] mt-1 font-medium">
                       {d.name || '—'}

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useChair } from '../../context/ChairContext'
-import { Plus, Trash2, User, AlertTriangle, Minus } from 'lucide-react'
+import { Plus, Trash2, User, AlertTriangle, Minus, Smile } from 'lucide-react'
 import { DEFAULT_MISBEHAVIOURS, STRIKE_THRESHOLD } from './strikeMisbehaviours'
 import { DELEGATION_OPTIONS, OTHER_DELEGATION_VALUE } from '../../constants/delegations'
 
@@ -13,6 +13,8 @@ export default function ChairDelegates() {
     addStrike,
     removeStrike,
     getStrikeCountsByType,
+    getDelegationEmoji,
+    setDelegationEmoji,
   } = useChair()
   const [countrySelect, setCountrySelect] = useState<string>('')
   const [customCountry, setCustomCountry] = useState('')
@@ -21,6 +23,8 @@ export default function ChairDelegates() {
   const [strikeDelegateId, setStrikeDelegateId] = useState<string | null>(null)
   const [customMisbehaviour, setCustomMisbehaviour] = useState('')
   const [selectedStrikeType, setSelectedStrikeType] = useState('')
+  const [editingEmojiFor, setEditingEmojiFor] = useState<string | null>(null)
+  const [customEmojiInput, setCustomEmojiInput] = useState('')
 
   const countryValue = countrySelect === OTHER_DELEGATION_VALUE ? customCountry.trim() : countrySelect
 
@@ -50,7 +54,7 @@ export default function ChairDelegates() {
     <div className="space-y-6">
       <div>
         <h2 className="font-semibold text-2xl text-[var(--text)] mb-1">👥 Delegates</h2>
-        <p className="text-[var(--text-muted)] text-sm">Add or remove delegates. Select from all UNGA members or add custom.</p>
+        <p className="text-[var(--text-muted)] text-sm">Add or remove delegates. Preset UNGA flags shown; use the 😊 button to set a custom emoji for delegations (e.g. FWC).</p>
       </div>
 
       <div className="card-block p-4 space-y-4">
@@ -140,9 +144,12 @@ export default function ChairDelegates() {
                 className={`px-4 py-3 flex flex-col gap-2 ${hasRed ? 'bg-[var(--danger)]/10 border-l-4 border-[var(--danger)]' : ''}`}
               >
                 <div className="flex items-center justify-between flex-wrap gap-2">
-                  <span className="text-sm text-[var(--text)]">
-                    <strong className="text-[var(--accent)]">{d.country}</strong>
-                    {d.name && <span className="text-[var(--text-muted)] ml-2">— {d.name}</span>}
+                  <span className="text-sm text-[var(--text)] flex items-center gap-2 min-w-0">
+                    <span className="text-base shrink-0" title="Delegation flag/emoji">
+                      {getDelegationEmoji(d.country) || '🏳️'}
+                    </span>
+                    <strong className="text-[var(--accent)] truncate">{d.country}</strong>
+                    {d.name && <span className="text-[var(--text-muted)] ml-1 shrink-0">— {d.name}</span>}
                     {totalStrikes > 0 && (
                       <span className="ml-2 inline-flex items-center gap-1 text-xs" title="Strikes">
                         <AlertTriangle className={`w-3.5 h-3.5 ${hasRed ? 'text-[var(--danger)]' : 'text-[var(--accent)]'}`} />
@@ -150,7 +157,17 @@ export default function ChairDelegates() {
                       </span>
                     )}
                   </span>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1 shrink-0">
+                    <button
+                      onClick={() => {
+                        setEditingEmojiFor(editingEmojiFor === d.country ? null : d.country)
+                        setCustomEmojiInput(getDelegationEmoji(d.country))
+                      }}
+                      className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--accent)] hover:bg-[var(--accent-soft)] transition-colors"
+                      title="Set custom emoji/flag for this delegation"
+                    >
+                      <Smile className="w-4 h-4" />
+                    </button>
                     <button
                       onClick={() => setStrikeDelegateId(showStrikeForm ? null : d.id)}
                       className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--accent)] hover:bg-[var(--accent-soft)] transition-colors"
@@ -167,6 +184,44 @@ export default function ChairDelegates() {
                     </button>
                   </div>
                 </div>
+                {editingEmojiFor === d.country && (
+                  <div className="pt-2 border-t border-[var(--border)] flex flex-wrap gap-2 items-center">
+                    <label className="text-xs text-[var(--text-muted)]">Custom emoji for this delegation:</label>
+                    <input
+                      type="text"
+                      value={customEmojiInput}
+                      onChange={(e) => setCustomEmojiInput(e.target.value)}
+                      placeholder="e.g. 🏴 or paste any emoji"
+                      className="w-24 px-2 py-1.5 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] text-sm"
+                    />
+                    <button
+                      onClick={() => {
+                        setDelegationEmoji(d.country, customEmojiInput.trim() || null)
+                        setEditingEmojiFor(null)
+                        setCustomEmojiInput('')
+                      }}
+                      className="px-2 py-1.5 rounded-lg bg-[var(--accent)] text-white text-xs font-medium"
+                    >
+                      Apply
+                    </button>
+                    <button
+                      onClick={() => {
+                        setDelegationEmoji(d.country, null)
+                        setEditingEmojiFor(null)
+                        setCustomEmojiInput('')
+                      }}
+                      className="px-2 py-1.5 rounded-lg bg-[var(--bg-elevated)] text-[var(--text-muted)] text-xs"
+                    >
+                      Clear (use preset)
+                    </button>
+                    <button
+                      onClick={() => { setEditingEmojiFor(null); setCustomEmojiInput('') }}
+                      className="px-2 py-1.5 rounded-lg text-[var(--text-muted)] text-xs"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                )}
                 {Object.keys(counts).length > 0 && (
                   <div className="flex flex-wrap gap-2 text-xs">
                     {Object.entries(counts).map(([type, count]) => (

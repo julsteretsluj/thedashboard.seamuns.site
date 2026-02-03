@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function ChairCommitteeTopic({ onClose }: Props) {
-  const { committee, topic, setCommittee, setTopic } = useChair()
+  const { committee, topic, universe, setCommittee, setTopic, setUniverse } = useChair()
 
   const selectedPreset = useMemo(() => {
     const found = COMMITTEE_OPTIONS.find((o) => o.value === committee)
@@ -59,6 +59,17 @@ export default function ChairCommitteeTopic({ onClose }: Props) {
             aria-label="Custom committee name"
           />
         )}
+      </label>
+      <label className="block">
+        <span className="text-xs text-[var(--text-muted)] block mb-1">Universe (optional, for fictional committees)</span>
+        <input
+          type="text"
+          value={universe}
+          onChange={(e) => setUniverse(e.target.value)}
+          placeholder="e.g. Star Wars, Harry Potter — leave blank for real-world"
+          className="w-full px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--text-muted)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+          aria-label="Universe (optional)"
+        />
       </label>
       <label className="block">
         <span className="text-xs text-[var(--text-muted)] block mb-1">Topic</span>

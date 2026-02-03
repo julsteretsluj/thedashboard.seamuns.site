@@ -20,7 +20,7 @@ const LABELS: Record<RollCallStatus, string> = {
 }
 
 export default function ChairRollCall() {
-  const { delegates, rollCallComplete, setRollCallComplete, updateDelegate } = useChair()
+  const { delegates, rollCallComplete, setRollCallComplete, updateDelegate, getDelegationEmoji } = useChair()
 
   const setRollCallStatus = (id: string, status: RollCallStatus) => {
     updateDelegate(id, { rollCallStatus: status })
@@ -80,9 +80,10 @@ export default function ChairRollCall() {
             const isAbsent = status === 'absent'
             return (
               <li key={d.id} className="px-4 py-3 flex items-center justify-between gap-2">
-                <span className="text-sm text-[var(--text)] min-w-0">
-                  <strong className="text-[var(--accent)]">{d.country}</strong>
-                  {d.name && <span className="text-[var(--text-muted)] ml-2">{d.name}</span>}
+                <span className="text-sm text-[var(--text)] min-w-0 flex items-center gap-2">
+                  <span className="text-base shrink-0">{getDelegationEmoji(d.country) || '🏳️'}</span>
+                  <strong className="text-[var(--accent)] truncate">{d.country}</strong>
+                  {d.name && <span className="text-[var(--text-muted)] shrink-0">{d.name}</span>}
                 </span>
                 <button
                   onClick={() => cycleStatus(d.id, status)}

@@ -14,6 +14,7 @@ export default function ChairVoting() {
     delegateVotes,
     recordVote,
     endVote,
+    getDelegationEmoji,
   } = useChair()
 
   if (!voteInProgress) {
@@ -76,9 +77,10 @@ export default function ChairVoting() {
                 key={d.id}
                 className={`px-4 py-3 flex items-center justify-between ${isAbsent ? 'opacity-60' : ''}`}
               >
-                <span className="text-sm text-[var(--text)]">
+                <span className="text-sm text-[var(--text)] flex items-center gap-2">
+                  <span className="shrink-0">{getDelegationEmoji(d.country) || '🏳️'}</span>
                   <strong className="text-[var(--accent)]">{d.country}</strong>
-                  {d.name && <span className="text-[var(--text-muted)] ml-2">{d.name}</span>}
+                  {d.name && <span className="text-[var(--text-muted)]">{d.name}</span>}
                   {isAbsent && (
                     <span className="ml-2 text-xs text-[var(--text-muted)]">(Absent)</span>
                   )}

@@ -12,6 +12,7 @@ export default function ChairSpeakers() {
     addToSpeakers,
     removeFromSpeakers,
     setActiveSpeaker,
+    getDelegationEmoji,
   } = useChair()
   const [selectedDelegate, setSelectedDelegate] = useState('')
   const [elapsed, setElapsed] = useState(0)
@@ -46,7 +47,8 @@ export default function ChairSpeakers() {
         </h3>
         {activeSpeaker ? (
           <div className="flex flex-wrap items-center gap-4">
-            <span className="text-lg font-semibold text-[var(--text)]">
+            <span className="text-lg font-semibold text-[var(--text)] flex items-center gap-2">
+              <span>{getDelegationEmoji(activeSpeaker.country) || '🏳️'}</span>
               {activeSpeaker.country} — {activeSpeaker.name}
             </span>
             <div className="flex items-center gap-2 text-sm">
@@ -113,7 +115,8 @@ export default function ChairSpeakers() {
             <li key={s.id} className="px-4 py-3 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <span className="text-xs text-[var(--text-muted)] w-6">{i + 1}.</span>
-                <span className="text-sm text-[var(--text)]">
+                <span className="text-sm text-[var(--text)] flex items-center gap-2">
+                  <span className="shrink-0">{getDelegationEmoji(s.country) || '🏳️'}</span>
                   <strong className="text-[var(--accent)]">{s.country}</strong> — {s.name}
                 </span>
                 {s.speaking && (
