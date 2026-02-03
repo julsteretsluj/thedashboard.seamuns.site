@@ -1,4 +1,6 @@
 import { useDelegate } from '../../context/DelegateContext'
+import { ExternalLink, Copy } from 'lucide-react'
+import { MUN_PREP_TEMPLATE_URL } from '../../constants/prepTemplate'
 
 export default function DelegatePrep() {
   const { country } = useDelegate()
@@ -9,6 +11,26 @@ export default function DelegatePrep() {
         <h2 className="font-semibold text-2xl text-[var(--text)] mb-1">📝 Prep Template</h2>
         <p className="text-[var(--text-muted)] text-sm">Use this template to structure your research and speaking prep.</p>
       </div>
+
+      <div className="card-block p-4 sm:p-5 border-2 border-[var(--accent)]/30 bg-[var(--accent-soft)]/50">
+        <h3 className="text-sm font-medium text-[var(--text)] mb-1 flex items-center gap-2">
+          <Copy className="w-4 h-4 text-[var(--accent)]" />
+          Make a copy to guide your prep
+        </h3>
+        <p className="text-sm text-[var(--text-muted)] mb-3">
+          Open the MUN Prep Template in Google Docs, then use <strong>File → Make a copy</strong> to create your own copy for research and speaking prep.
+        </p>
+        <a
+          href={MUN_PREP_TEMPLATE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[var(--accent)] text-white text-sm font-medium hover:opacity-90 transition-opacity"
+        >
+          <ExternalLink className="w-4 h-4" />
+          Open MUN Prep Template (Google Doc)
+        </a>
+      </div>
+
       <div className="card-block p-6 space-y-4">
         <section>
           <h3 className="text-sm font-medium text-[var(--accent)] mb-2">🌍 Country</h3>

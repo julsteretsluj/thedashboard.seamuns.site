@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { Palette, Sun, Moon, ChevronDown } from 'lucide-react'
-import { useTheme } from '../context/ThemeContext'
+import { useTheme, DEFAULT_COLOR_THEME_ID } from '../context/ThemeContext'
 
 /** Theme selector aligned with seamuns.site: Appearance (Light/Dark) + theme colors (Blue, Teal, etc.) */
 export default function ThemeSelector() {
@@ -76,37 +76,50 @@ export default function ThemeSelector() {
             </button>
           </div>
           <div className="px-3 py-1.5 text-xs font-medium text-[var(--text-muted)] border-b border-[var(--border)] mb-2">
-            Theme color
+            Theme color <span className="font-normal">(default: Gold &amp; Blue)</span>
           </div>
           <div className="max-h-[260px] overflow-y-auto" role="listbox" aria-label="Theme color">
-            {colorThemes.map((c) => (
-              <button
-                key={c.id}
-                type="button"
-                role="option"
-                aria-selected={colorThemeId === c.id}
-                onClick={() => {
-                  setColorThemeId(c.id)
-                  setThemeId('default')
-                  setOpen(false)
-                }}
-                className={`flex items-center gap-2 w-full px-3 py-2 text-left text-sm transition-colors whitespace-nowrap min-w-0 ${
-                  colorThemeId === c.id
-                    ? 'bg-[var(--brand)] text-white'
-                    : 'text-[var(--text)] hover:bg-[var(--bg-elevated)]'
-                }`}
-              >
-                <span className="text-base flex-shrink-0" aria-hidden>
-                  {c.emoji}
-                </span>
-                <span className="truncate">{c.label}</span>
-                {colorThemeId === c.id && (
-                  <span className="ml-auto text-white" aria-hidden>
-                    ✓
+            {colorThemes.map((c) => {
+              const isDefault = c.id === DEFAULT_COLOR_THEME_ID
+              const isSelected = colorThemeId === c.id
+              return (
+                <button
+                  key={c.id}
+                  type="button"
+                  role="option"
+                  aria-selected={isSelected}
+                  onClick={() => {
+                    setColorThemeId(c.id)
+                    setThemeId('default')
+                    setOpen(false)
+                  }}
+                  className={`flex items-center gap-2 w-full px-3 py-2 text-left text-sm transition-colors whitespace-nowrap min-w-0 ${
+                    isSelected
+                      ? 'bg-[var(--brand)] text-white'
+                      : 'text-[var(--text)] hover:bg-[var(--bg-elevated)]'
+                  }`}
+                >
+                  <span className="text-base flex-shrink-0" aria-hidden>
+                    {c.emoji}
                   </span>
-                )}
-              </button>
-            ))}
+                  <span className="truncate">{c.label}</span>
+                  {isDefault && (
+                    <span
+                      className={`ml-1 px-1.5 py-0.5 rounded text-[10px] font-medium flex-shrink-0 ${
+                        isSelected ? 'bg-white/20 text-white' : 'bg-[var(--accent-soft)] text-[var(--accent)]'
+                      }`}
+                    >
+                      Default
+                    </span>
+                  )}
+                  {isSelected && (
+                    <span className="ml-auto text-white" aria-hidden>
+                      ✓
+                    </span>
+                  )}
+                </button>
+              )
+            })}
           </div>
         </div>
       )}

@@ -48,7 +48,7 @@
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-/* Color theme options (default: Gold & Blue for high-quality diplomacy) */
+/* Color theme options — Gold & Blue is the default theme (MUN / diplomacy branding) */
 [data-color-theme="gold-blue"] {
   --brand: #1d4ed8;
   --brand-soft: rgba(29, 78, 216, 0.14);

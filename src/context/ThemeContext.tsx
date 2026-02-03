@@ -16,6 +16,9 @@ export const THEMES = [
   { id: 'rights', label: 'Human rights', emoji: '✊', brand: '#dc2626' },
 ] as const
 
+/** Default theme: Gold & Blue — recommended for MUN / diplomacy branding */
+export const DEFAULT_COLOR_THEME_ID = 'gold-blue' as const
+
 export const COLOR_THEMES = [
   { id: 'gold-blue', label: 'Gold & Blue', emoji: '🏅' },
   { id: 'red', label: 'Red', emoji: '🔴' },
@@ -64,9 +67,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   })
 
   const [colorThemeId, setColorThemeIdState] = useState<ColorThemeId>(() => {
-    if (typeof window === 'undefined') return 'gold-blue'
+    if (typeof window === 'undefined') return DEFAULT_COLOR_THEME_ID
     const stored = localStorage.getItem(STORAGE_KEY_COLOR_THEME)
-    return stored && isValidColorThemeId(stored) ? stored : 'gold-blue'
+    return stored && isValidColorThemeId(stored) ? stored : DEFAULT_COLOR_THEME_ID
   })
 
   const [colorMode, setColorModeState] = useState<ColorMode>(() => {

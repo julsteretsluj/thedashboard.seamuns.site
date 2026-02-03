@@ -22,6 +22,7 @@ interface ChairState {
   voteInProgress: Motion | null
   delegateVotes: Record<string, 'yes' | 'no' | 'abstain'>
   flowChecklist: Record<string, boolean>
+  prepChecklist: Record<string, boolean>
 }
 
 const defaultState: ChairState = {
@@ -45,6 +46,7 @@ const defaultState: ChairState = {
   voteInProgress: null,
   delegateVotes: {},
   flowChecklist: {},
+  prepChecklist: {},
 }
 
 type ChairContextValue = ChairState & {
@@ -80,6 +82,9 @@ type ChairContextValue = ChairState & {
   toggleFlowStep: (stepId: string) => void
   isFlowStepDone: (stepId: string) => boolean
   resetFlowChecklist: () => void
+  togglePrepStep: (stepId: string) => void
+  isPrepStepDone: (stepId: string) => boolean
+  resetPrepChecklist: () => void
 }
 
 const ChairContext = createContext<ChairContextValue | null>(null)
@@ -301,6 +306,20 @@ export function ChairProvider({ children }: { children: ReactNode }) {
     setState((s) => ({ ...s, flowChecklist: {} }))
   }, [])
 
+  const togglePrepStep = useCallback((stepId: string) => {
+    setState((s) => ({
+      ...s,
+      prepChecklist: {
+        ...s.prepChecklist,
+        [stepId]: !s.prepChecklist[stepId],
+      },
+    }))
+  }, [])
+  const isPrepStepDone = useCallback((stepId: string) => !!state.prepChecklist[stepId], [state.prepChecklist])
+  const resetPrepChecklist = useCallback(() => {
+    setState((s) => ({ ...s, prepChecklist: {} }))
+  }, [])
+
   const value: ChairContextValue = {
     ...state,
     setCommittee,
@@ -344,6 +363,9 @@ export function ChairProvider({ children }: { children: ReactNode }) {
     toggleFlowStep,
     isFlowStepDone,
     resetFlowChecklist,
+    togglePrepStep,
+    isPrepStepDone,
+    resetPrepChecklist,
   }
 
   return <ChairContext.Provider value={value}>{children}</ChairContext.Provider>

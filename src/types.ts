@@ -74,8 +74,20 @@ export interface DelegateConference {
     positionPaper: boolean
     researchTopic: boolean
     researchCountryStance: boolean
+    researchResolutions: boolean
+    researchAllies: boolean
+    researchNews: boolean
+    positionPaperDraft: boolean
+    positionPaperFinal: boolean
+    positionPaperSubmit: boolean
+    openingSpeechDraft: boolean
+    openingSpeechTimed: boolean
     openingSpeech: boolean
     modSpeeches: boolean
+    modCaucusPoints: boolean
+    knowRules: boolean
+    knowAgenda: boolean
+    materialsReady: boolean
   }
   trustedSources: string[]
   nationSources: string[]

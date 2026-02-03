@@ -2,11 +2,7 @@ import { useState } from 'react'
 import { useChair } from '../../context/ChairContext'
 import { Plus, Trash2, User, AlertTriangle, Minus } from 'lucide-react'
 import { DEFAULT_MISBEHAVIOURS, STRIKE_THRESHOLD } from './strikeMisbehaviours'
-
-const TRADITIONAL = [
-  'USA', 'UK', 'France', 'China', 'Russia', 'Germany', 'Japan', 'India', 'Brazil', 'Canada',
-  'Australia', 'Italy', 'South Korea', 'Mexico', 'Indonesia', 'South Africa', 'Egypt', 'Nigeria', 'Kenya', 'Saudi Arabia',
-]
+import { DELEGATION_OPTIONS, OTHER_DELEGATION_VALUE } from '../../constants/delegations'
 
 export default function ChairDelegates() {
   const {
@@ -18,40 +14,43 @@ export default function ChairDelegates() {
     removeStrike,
     getStrikeCountsByType,
   } = useChair()
-  const [country, setCountry] = useState('')
+  const [countrySelect, setCountrySelect] = useState<string>('')
+  const [customCountry, setCustomCountry] = useState('')
   const [name, setName] = useState('')
-  const [useTraditional, setUseTraditional] = useState(true)
-  const [addingBulk, setAddingBulk] = useState(false)
+  const [showBulkAdd, setShowBulkAdd] = useState(false)
   const [strikeDelegateId, setStrikeDelegateId] = useState<string | null>(null)
   const [customMisbehaviour, setCustomMisbehaviour] = useState('')
   const [selectedStrikeType, setSelectedStrikeType] = useState('')
 
+  const countryValue = countrySelect === OTHER_DELEGATION_VALUE ? customCountry.trim() : countrySelect
+
   const addOne = () => {
-    if (!country.trim()) return
+    if (!countryValue) return
     addDelegate({
-      country: country.trim(),
+      country: countryValue,
       name: name.trim() || undefined,
       committee: committee || undefined,
       present: false,
     })
-    setCountry('')
+    setCountrySelect('')
+    setCustomCountry('')
     setName('')
   }
 
-  const addTraditional = () => {
-    TRADITIONAL.forEach((c) => {
+  const addAllMissing = () => {
+    DELEGATION_OPTIONS.forEach((c) => {
       if (!delegates.some((d) => d.country === c)) {
         addDelegate({ country: c, committee: committee || undefined, present: false })
       }
     })
-    setAddingBulk(false)
+    setShowBulkAdd(false)
   }
 
   return (
     <div className="space-y-6">
       <div>
         <h2 className="font-semibold text-2xl text-[var(--text)] mb-1">👥 Delegates</h2>
-        <p className="text-[var(--text-muted)] text-sm">Add or remove delegates. Use traditional allocation or custom.</p>
+        <p className="text-[var(--text-muted)] text-sm">Add or remove delegates. Select from all UNGA members or add custom.</p>
       </div>
 
       <div className="card-block p-4 space-y-4">
@@ -59,14 +58,32 @@ export default function ChairDelegates() {
         <div className="flex flex-wrap gap-3 items-end">
           <label className="flex flex-col gap-1">
             <span className="text-xs text-[var(--text-muted)]">Country</span>
-            <input
-              type="text"
-              value={country}
-              onChange={(e) => setCountry(e.target.value)}
-              placeholder="e.g. France"
-              className="w-40 px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--text-muted)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
-            />
+            <select
+              value={countrySelect}
+              onChange={(e) => setCountrySelect(e.target.value)}
+              className="min-w-[12rem] max-w-[20rem] px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+            >
+              <option value="">— Select country —</option>
+              {DELEGATION_OPTIONS.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+              <option value={OTHER_DELEGATION_VALUE}>— Other —</option>
+            </select>
           </label>
+          {countrySelect === OTHER_DELEGATION_VALUE && (
+            <label className="flex flex-col gap-1">
+              <span className="text-xs text-[var(--text-muted)]">Custom country</span>
+              <input
+                type="text"
+                value={customCountry}
+                onChange={(e) => setCustomCountry(e.target.value)}
+                placeholder="e.g. Observer State"
+                className="w-40 px-3 py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] placeholder-[var(--text-muted)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+              />
+            </label>
+          )}
           <label className="flex flex-col gap-1">
             <span className="text-xs text-[var(--text-muted)]">Name (optional)</span>
             <input
@@ -79,50 +96,29 @@ export default function ChairDelegates() {
           </label>
           <button
             onClick={addOne}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--accent)] text-white text-sm font-medium hover:opacity-90 transition-opacity"
+            disabled={!countryValue}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--accent)] text-white text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Plus className="w-4 h-4" /> ➕ Add
+            <Plus className="w-4 h-4" /> Add
           </button>
         </div>
 
-        <div className="pt-2 border-t border-[var(--border)]">
+        <div className="pt-2 border-t border-[var(--border)] flex flex-wrap items-center gap-2">
           <button
-            onClick={() => setUseTraditional(!useTraditional)}
-            className="text-sm text-[var(--accent)] hover:underline"
+            onClick={() => setShowBulkAdd(true)}
+            className="px-3 py-1.5 rounded-lg bg-[var(--accent-soft)] text-[var(--accent)] text-sm font-medium hover:bg-[var(--accent-soft)]/80 transition-colors"
           >
-            {useTraditional ? 'Hide' : 'Show'} traditional allocation
+            Add all UNGA members not in list
           </button>
-          {useTraditional && (
-            <div className="mt-3 flex flex-wrap gap-2">
-              {TRADITIONAL.map((c) => (
-                <button
-                  key={c}
-                  onClick={() => {
-                    setCountry(c)
-                    setName('')
-                  }}
-                  className="px-3 py-1.5 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text)] text-sm hover:border-[var(--accent)] transition-colors"
-                >
-                  {c}
-                </button>
-              ))}
-              <button
-                onClick={() => setAddingBulk(true)}
-                className="px-3 py-1.5 rounded-lg bg-[var(--accent-soft)] text-[var(--accent)] text-sm font-medium"
-              >
-                Add all missing
-              </button>
-            </div>
-          )}
         </div>
       </div>
 
-      {addingBulk && (
-        <div className="rounded-xl border border-[var(--accent)] bg-[var(--accent-soft)] p-4 flex items-center justify-between">
-          <p className="text-sm text-[var(--text)]">Add all traditional countries not yet in the list?</p>
+      {showBulkAdd && (
+        <div className="rounded-xl border border-[var(--accent)] bg-[var(--accent-soft)] p-4 flex items-center justify-between flex-wrap gap-2">
+          <p className="text-sm text-[var(--text)]">Add all 193 UNGA member states not yet in the list?</p>
           <div className="flex gap-2">
-            <button onClick={() => setAddingBulk(false)} className="px-3 py-1.5 rounded-lg bg-[var(--bg-card)] text-sm">Cancel</button>
-            <button onClick={addTraditional} className="px-3 py-1.5 rounded-lg bg-[var(--accent)] text-white text-sm font-medium">Add all</button>
+            <button onClick={() => setShowBulkAdd(false)} className="px-3 py-1.5 rounded-lg bg-[var(--bg-card)] text-sm">Cancel</button>
+            <button onClick={addAllMissing} className="px-3 py-1.5 rounded-lg bg-[var(--accent)] text-white text-sm font-medium">Add all</button>
           </div>
         </div>
       )}

@@ -12,24 +12,41 @@ import { loadDelegateData, saveDelegateData } from '../lib/delegateData'
 function migrateConference(c: DelegateConference): DelegateConference {
   const hasLegacy = c.committeeMatrix && Object.keys(c.committeeMatrix).length > 0
   const hasEntries = c.committeeMatrixEntries && c.committeeMatrixEntries.length > 0
-  if (hasLegacy && !hasEntries && c.committeeMatrix) {
-    return {
-      ...c,
-      committeeCount: c.committeeCount ?? 0,
-      committees: c.committees ?? [],
-      committeeMatrixEntries: Object.entries(c.committeeMatrix).map(([committee, firstName]) => ({
-        committee,
-        firstName,
-        delegation: '',
-      })),
-    }
-  }
-  return {
+  const base = {
     ...c,
     committeeCount: c.committeeCount ?? 0,
     committees: c.committees ?? [],
-    committeeMatrixEntries: c.committeeMatrixEntries ?? [],
+    committeeMatrixEntries:
+      hasLegacy && !hasEntries && c.committeeMatrix
+        ? Object.entries(c.committeeMatrix).map(([committee, firstName]) => ({
+            committee,
+            firstName,
+            delegation: '',
+          }))
+        : c.committeeMatrixEntries ?? [],
+    checklist: { ...defaultChecklist, ...(c.checklist || {}) },
   }
+  return base
+}
+
+const defaultChecklist: DelegateConference['checklist'] = {
+  positionPaper: false,
+  researchTopic: false,
+  researchCountryStance: false,
+  researchResolutions: false,
+  researchAllies: false,
+  researchNews: false,
+  positionPaperDraft: false,
+  positionPaperFinal: false,
+  positionPaperSubmit: false,
+  openingSpeechDraft: false,
+  openingSpeechTimed: false,
+  openingSpeech: false,
+  modSpeeches: false,
+  modCaucusPoints: false,
+  knowRules: false,
+  knowAgenda: false,
+  materialsReady: false,
 }
 
 const defaultConference = (id: string): DelegateConference => ({
@@ -41,13 +58,7 @@ const defaultConference = (id: string): DelegateConference => ({
   committees: [],
   committeeMatrixEntries: [],
   countdownDate: '',
-  checklist: {
-    positionPaper: false,
-    researchTopic: false,
-    researchCountryStance: false,
-    openingSpeech: false,
-    modSpeeches: false,
-  },
+  checklist: { ...defaultChecklist },
   trustedSources: [],
   nationSources: [],
   uploadedResources: [],
