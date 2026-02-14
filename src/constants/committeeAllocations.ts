@@ -63,26 +63,35 @@ const LIMITED_ALLOCATION_COMMITTEES: Record<string, readonly string[]> = {
 
 const FULL_UNGA = [...DELEGATION_OPTIONS]
 
+/** Resolve committee string (value or label) to canonical option value for lookup. */
+function resolveCommitteeKey(committeeValueOrLabel: string): string {
+  const key = committeeValueOrLabel?.trim() ?? ''
+  if (!key) return ''
+  const option = COMMITTEE_OPTIONS.find((o) => o.value === key || o.label === key)
+  return option ? option.value : key
+}
+
 /**
  * Returns possible delegation (country) options for a committee.
  * Use in Chair when adding delegates and in Delegate Matrix per-committee tab.
- * @param committeeValueOrLabel - Committee value (e.g. UNSC) or display label; custom names get full UNGA.
+ * @param committeeValueOrLabel - Committee value (e.g. UNSC, AL) or display label; custom names get full UNGA.
  */
 export function getDelegationsForCommittee(committeeValueOrLabel: string): string[] {
   if (!committeeValueOrLabel || !committeeValueOrLabel.trim()) {
     return FULL_UNGA
   }
   const key = committeeValueOrLabel.trim()
-  const limited = LIMITED_ALLOCATION_COMMITTEES[key]
-  if (limited) {
-    return [...limited]
-  }
-  // Match by committee option value (e.g. UNSC, HSC)
-  const byValue = COMMITTEE_OPTIONS.find(
-    (o) => o.value === key || o.label === key
-  )
-  if (byValue && LIMITED_ALLOCATION_COMMITTEES[byValue.value]) {
-    return [...LIMITED_ALLOCATION_COMMITTEES[byValue.value]]
+  // Try exact key first (value or label)
+  let limited = LIMITED_ALLOCATION_COMMITTEES[key]
+  if (limited) return [...limited]
+  // Resolve to canonical value and try again
+  const canonical = resolveCommitteeKey(key)
+  if (canonical) {
+    limited = LIMITED_ALLOCATION_COMMITTEES[canonical]
+    if (limited) return [...limited]
+    const label = COMMITTEE_OPTIONS.find((o) => o.value === canonical)?.label
+    if (label) limited = LIMITED_ALLOCATION_COMMITTEES[label]
+    if (limited) return [...limited]
   }
   return FULL_UNGA
 }
