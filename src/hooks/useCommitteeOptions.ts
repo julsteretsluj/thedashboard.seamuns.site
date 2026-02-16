@@ -32,6 +32,8 @@ export function useCommitteeOptions(): CommitteeOption[] {
         if (cancelled) return
         if (userOpts?.length) {
           setOptions(userOpts)
+          // Re-save migrated list (e.g. EP → EU) so Firestore doc stays up to date
+          saveUserCommitteeOptions(userId, userOpts).catch(() => {})
           return
         }
       }

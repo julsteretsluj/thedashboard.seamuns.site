@@ -18,6 +18,19 @@ function isValidOptions(data: unknown): data is CommitteeOption[] {
   )
 }
 
+/** Migrate old EP / European Parliament to EU — European Union; dedupe by value. */
+function migrateCommitteeOptions(options: CommitteeOption[]): CommitteeOption[] {
+  const migrated = options.map((o) => {
+    if (o.value === 'EP' || (o.label && (o.label.includes('European Parliament') || o.label === 'EP — European Parliament'))) {
+      return { value: 'EU', label: 'EU — European Union' }
+    }
+    return o
+  })
+  const byValue = new Map<string, CommitteeOption>()
+  migrated.forEach((o) => byValue.set(o.value, o))
+  return [...byValue.values()]
+}
+
 /**
  * Load committee options from global config (read by anyone; survives site data clear).
  */
@@ -29,7 +42,7 @@ export async function loadCommitteeOptionsFromFirestore(): Promise<CommitteeOpti
     if (!snap.exists()) return null
     const data = snap.data()
     const options = data?.options ?? data?.committeeOptions ?? data
-    if (isValidOptions(options)) return options
+    if (isValidOptions(options)) return migrateCommitteeOptions(options)
     return null
   } catch {
     return null
@@ -47,7 +60,7 @@ export async function loadUserCommitteeOptions(userId: string): Promise<Committe
     if (!snap.exists()) return null
     const data = snap.data()
     const options = data?.committeeOptions ?? data?.options ?? data
-    if (isValidOptions(options)) return options
+    if (isValidOptions(options)) return migrateCommitteeOptions(options)
     return null
   } catch {
     return null

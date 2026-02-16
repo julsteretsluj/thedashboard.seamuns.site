@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import { useChair } from '../../context/ChairContext'
-import { OTHER_COMMITTEE_VALUE } from '../../constants/committees'
-import { useCommitteeOptions } from '../../hooks/useCommitteeOptions'
+import { COMMITTEE_OPTIONS, OTHER_COMMITTEE_VALUE } from '../../constants/committees'
 
 interface Props {
   onClose?: () => void
@@ -9,12 +8,11 @@ interface Props {
 
 export default function ChairCommitteeTopic({ onClose }: Props) {
   const { committee, topic, universe, chairName, chairEmail, setCommittee, setTopic, setUniverse, setChairName, setChairEmail } = useChair()
-  const committeeOptions = useCommitteeOptions()
 
   const selectedPreset = useMemo(() => {
-    const found = committeeOptions.find((o) => o.value === committee)
+    const found = COMMITTEE_OPTIONS.find((o) => o.value === committee)
     return found ? committee : committee ? OTHER_COMMITTEE_VALUE : ''
-  }, [committee, committeeOptions])
+  }, [committee])
 
   const handleCommitteeSelect = (value: string) => {
     if (value === OTHER_COMMITTEE_VALUE) setCommittee('')
@@ -40,7 +38,7 @@ export default function ChairCommitteeTopic({ onClose }: Props) {
           aria-label="Committee"
         >
           <option value="">Select committee…</option>
-          {committeeOptions.map((o) => (
+          {COMMITTEE_OPTIONS.map((o) => (
             <option key={o.value} value={o.value}>
               {o.label}
             </option>
