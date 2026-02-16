@@ -134,6 +134,7 @@ export default function Layout() {
       </main>
       <footer className="border-t border-[var(--border)] py-2 sm:py-3 px-3 sm:px-4 text-center text-[10px] sm:text-xs text-[var(--text-muted)] bg-[var(--bg-elevated)]/50">
         Part of <a href="https://seamuns.site" target="_blank" rel="noopener noreferrer" className="text-[var(--brand)] hover:underline">SEAMUNs</a> — Model UN conferences across South East Asia
+        <span className="block mt-1 opacity-70" title="You see this when the latest build (AL, EU, IOPC, UKPC, PC, HCC committees) is deployed">Build: committees+allocations</span>
       </footer>
     </div>
   )
