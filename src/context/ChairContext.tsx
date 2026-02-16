@@ -147,7 +147,17 @@ export function ChairProvider({
     loadChairData(userId)
       .then((data) => {
         if (cancelled || !data) return
-        setState({ ...defaultState, ...data })
+        setState({
+          ...defaultState,
+          ...data,
+          delegates: Array.isArray(data.delegates) ? (data.delegates as ChairState['delegates']) : defaultState.delegates,
+          delegateStrikes: Array.isArray(data.delegateStrikes) ? (data.delegateStrikes as ChairState['delegateStrikes']) : defaultState.delegateStrikes,
+          delegateFeedback: Array.isArray(data.delegateFeedback) ? (data.delegateFeedback as ChairState['delegateFeedback']) : defaultState.delegateFeedback,
+          motions: Array.isArray(data.motions) ? (data.motions as ChairState['motions']) : defaultState.motions,
+          speakers: Array.isArray(data.speakers) ? (data.speakers as ChairState['speakers']) : defaultState.speakers,
+          activeSpeaker: data.activeSpeaker as ChairState['activeSpeaker'],
+          voteInProgress: data.voteInProgress as ChairState['voteInProgress'],
+        })
       })
       .catch(() => {})
       .finally(() => {
