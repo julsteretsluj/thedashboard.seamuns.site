@@ -196,7 +196,7 @@ export function ChairProvider({
     }
   }, [userId, state])
 
-  // Autosave to Firestore when signed in and after initial load
+  // Autosave to Firestore when signed in and after initial load (debounced on state change)
   useEffect(() => {
     if (!userId || !isLoaded) return
     const t = setTimeout(() => {
@@ -204,6 +204,13 @@ export function ChairProvider({
     }, 3000)
     return () => clearTimeout(t)
   }, [userId, isLoaded, state, saveToAccount])
+
+  // Autosave every 5 minutes
+  useEffect(() => {
+    if (!userId || !isLoaded) return
+    const interval = setInterval(() => saveToAccount(), 5 * 60 * 1000)
+    return () => clearInterval(interval)
+  }, [userId, isLoaded, saveToAccount])
 
   const setCommittee = useCallback((committee: string) => {
     setState((s) => ({ ...s, committee }))

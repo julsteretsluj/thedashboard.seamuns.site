@@ -349,6 +349,13 @@ export function DelegateProvider({
     return () => clearTimeout(t)
   }, [userId, isLoaded, conferences, activeId, saveToAccount])
 
+  // Autosave every 5 minutes
+  useEffect(() => {
+    if (!userId || !isLoaded) return
+    const interval = setInterval(() => saveToAccount(), 5 * 60 * 1000)
+    return () => clearInterval(interval)
+  }, [userId, isLoaded, saveToAccount])
+
   const value: DelegateContextValue = {
     ...current,
     conferences,

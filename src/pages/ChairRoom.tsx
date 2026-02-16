@@ -70,10 +70,15 @@ function ChairRoomContent() {
   const [active, setActive] = useState('committee')
   const [showSettings, setShowSettings] = useState(false)
   const [sidebarExpanded, setSidebarExpanded] = useState(getSidebarExpanded)
+  const { saveToAccount, isLoaded } = useChair()
 
   useEffect(() => {
     localStorage.setItem(SIDEBAR_STORAGE_KEY, String(sidebarExpanded))
   }, [sidebarExpanded])
+
+  useEffect(() => {
+    if (isLoaded) saveToAccount()
+  }, [active, isLoaded, saveToAccount])
 
   const toggleSidebar = () => setSidebarExpanded((v) => !v)
 

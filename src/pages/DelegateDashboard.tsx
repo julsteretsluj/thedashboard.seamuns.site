@@ -147,10 +147,15 @@ const sections = [
 function DelegateDashboardContent() {
   const [active, setActive] = useState('country')
   const [sidebarExpanded, setSidebarExpanded] = useState(getSidebarExpanded)
+  const { saveToAccount, isLoaded } = useDelegate()
 
   useEffect(() => {
     localStorage.setItem(SIDEBAR_STORAGE_KEY, String(sidebarExpanded))
   }, [sidebarExpanded])
+
+  useEffect(() => {
+    if (isLoaded) saveToAccount()
+  }, [active, isLoaded, saveToAccount])
 
   const toggleSidebar = () => setSidebarExpanded((v) => !v)
 

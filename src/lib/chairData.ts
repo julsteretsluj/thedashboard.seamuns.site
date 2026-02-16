@@ -3,7 +3,10 @@ import { db } from './firebase'
 
 const COLLECTION = 'chairData'
 
-/** Chair state as persisted to Firestore (same shape as ChairContext state). */
+/**
+ * All chair info persisted to Firebase: committee, topic, delegates, motions,
+ * speakers, crisis, archive, voting, checklists, emoji overrides, chair name/email.
+ */
 export interface ChairDataDoc {
   committee: string
   topic: string
