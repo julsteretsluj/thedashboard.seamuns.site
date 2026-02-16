@@ -2,18 +2,21 @@ import { useState } from 'react'
 import { useDelegate } from '../../context/DelegateContext'
 import { Plus, Trash2 } from 'lucide-react'
 import InfoPopover from '../InfoPopover'
-import { COMMITTEE_OPTIONS, OTHER_COMMITTEE_VALUE } from '../../constants/committees'
+import { OTHER_COMMITTEE_VALUE } from '../../constants/committees'
 import { OTHER_DELEGATION_VALUE } from '../../constants/delegations'
 import { getDelegationsForCommittee } from '../../constants/committeeAllocations'
 import { getPresetDelegationFlag } from '../../constants/delegationFlags'
+import { useCommitteeOptions } from '../../hooks/useCommitteeOptions'
+import type { CommitteeOption } from '../../hooks/useCommitteeOptions'
 
-function getCommitteeLabel(value: string): string {
+function getCommitteeLabel(value: string, options: CommitteeOption[]): string {
   if (value === OTHER_COMMITTEE_VALUE) return 'Other'
-  const opt = COMMITTEE_OPTIONS.find((o) => o.value === value)
+  const opt = options.find((o) => o.value === value)
   return opt ? opt.label : value
 }
 
 export default function DelegateMatrix() {
+  const committeeOptions = useCommitteeOptions()
   const {
     committeeCount,
     committees,
@@ -61,7 +64,7 @@ export default function DelegateMatrix() {
 
   const displayCommitteeLabel = (value: string) => {
     if (value === OTHER_COMMITTEE_VALUE) return 'Other'
-    return getCommitteeLabel(value)
+    return getCommitteeLabel(value, committeeOptions)
   }
 
   const tabCommittees = effectiveCommittees.filter(Boolean)
@@ -123,7 +126,7 @@ export default function DelegateMatrix() {
                 <span className="text-xs text-[var(--text-muted)] w-20">Committee {i + 1}</span>
                 <select
                   value={
-                    effectiveCommittees[i] && COMMITTEE_OPTIONS.some((o) => o.value === effectiveCommittees[i])
+                    effectiveCommittees[i] && committeeOptions.some((o) => o.value === effectiveCommittees[i])
                       ? effectiveCommittees[i]
                       : effectiveCommittees[i]
                         ? OTHER_COMMITTEE_VALUE
@@ -134,7 +137,7 @@ export default function DelegateMatrix() {
                   aria-label={`Committee ${i + 1}`}
                 >
                   <option value="">Select…</option>
-                  {COMMITTEE_OPTIONS.map((o) => (
+                  {committeeOptions.map((o) => (
                     <option key={o.value} value={o.value}>
                       {o.label}
                     </option>
@@ -142,7 +145,7 @@ export default function DelegateMatrix() {
                   <option value={OTHER_COMMITTEE_VALUE}>Other (custom)</option>
                 </select>
                 {(effectiveCommittees[i] === OTHER_COMMITTEE_VALUE ||
-                  (effectiveCommittees[i] && !COMMITTEE_OPTIONS.some((o) => o.value === effectiveCommittees[i]))) && (
+                  (effectiveCommittees[i] && !committeeOptions.some((o) => o.value === effectiveCommittees[i]))) && (
                   <input
                     type="text"
                     value={effectiveCommittees[i] && effectiveCommittees[i] !== OTHER_COMMITTEE_VALUE ? effectiveCommittees[i] : (customCommitteeNames[i] ?? '')}
